@@ -12,6 +12,10 @@ const SITE_URL =
   (process.env.VERCEL_PROJECT_PRODUCTION_URL && `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`) ||
   undefined;
 
+// Serve from a sub-path, e.g. /devilsadvocate for a GitHub Pages project
+// site. The Pages workflow sets this; Vercel and Netlify serve from /.
+const BASE_PATH = process.env.BASE_PATH || '/';
+
 // A dev-only page that shows every voice component side by side. It is
 // injected only under `astro dev`, so it never ships in the static build.
 /** @type {import('astro').AstroIntegration} */
@@ -40,7 +44,7 @@ const crawlerFiles = {
         logger.warn('SITE_URL is not set: wrote robots.txt without a sitemap, and skipped sitemap.xml.');
         return;
       }
-      const base = SITE_URL.replace(/\/$/, '');
+      const base = SITE_URL.replace(/\/$/, '') + BASE_PATH.replace(/\/$/, '');
       const urls = pages
         .map((p) => `${base}/${p.pathname}`)
         .sort()
@@ -57,6 +61,7 @@ const crawlerFiles = {
 
 export default defineConfig({
   site: SITE_URL,
+  base: BASE_PATH,
   output: 'static',
   trailingSlash: 'ignore',
   integrations: [devComponentsPage, crawlerFiles],

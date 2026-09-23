@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { CONTACT_EMAIL } from '../config';
+import { CONTACT_EMAIL, path } from '../config';
 ---
 
 <Base title="Privacy" description="What Devils Advocate does with your waitlist details.">
@@ -12,7 +12,7 @@ import { CONTACT_EMAIL } from '../config';
       <p>
         Email <a class="link-quiet" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> to have them deleted.
       </p>
-      <p><a class="link-quiet inline-flex min-h-11 items-center" href="/">Back to the home page</a></p>
+      <p><a class="link-quiet inline-flex min-h-11 items-center" href={path('/')}>Back to the home page</a></p>
     </div>
   </article>
 </Base>

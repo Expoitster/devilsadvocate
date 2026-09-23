@@ -1,10 +1,35 @@
 # Deploying the site
 
 The site builds to plain static files in `dist/`. There is no server code,
-so any static host works. These are the steps for Vercel and Netlify. Pick
-one.
+so any static host works. It's currently set up for GitHub Pages; Vercel
+and Netlify steps are further down.
 
-## Before you deploy
+## GitHub Pages (current)
+
+Live at **https://expoitster.github.io/devilsadvocate/**
+
+`.github/workflows/pages.yml` builds and publishes the site on every push
+to `claude/lucid-planck-8061mj` or `main`.
+
+1. **One-time setup:** go to **Settings > Pages**. Under **Build and
+   deployment > Source**, choose **GitHub Actions**. The workflow can't
+   switch this on itself: GitHub doesn't let a workflow's own token change
+   repository settings.
+2. **Run it:** go to **Actions > Deploy to GitHub Pages**. Re-run the
+   latest run, or use **Run workflow**. It takes about a minute. The URL
+   appears on the run page and under **Settings > Pages**.
+3. **Optional:** go to **Settings > Secrets and variables > Actions >
+   Variables** and add `PUBLIC_CONTACT_EMAIL` (and later
+   `PUBLIC_FORM_ENDPOINT`). They take effect on the next deploy.
+
+The site is served from `/devilsadvocate/`. The workflow passes that path
+to the build as `BASE_PATH`, so every link and asset is prefixed with it.
+If you later add a custom domain under **Settings > Pages**, the workflow
+picks up the new address automatically on the next run.
+
+## Vercel or Netlify
+
+### Before you deploy
 
 1. **Merge the work into your main branch.** Hosts deploy one branch to
    production, usually `main`. Merge `claude/lucid-planck-8061mj` into it,
@@ -26,7 +51,7 @@ one.
    Anything left unset shows up on the page as a literal `{{…}}`, so you'll
    spot it.
 
-## Option A: Vercel
+### Option A: Vercel
 
 1. Sign in at vercel.com with GitHub.
 2. Choose **Add New… > Project**, find `devilsadvocate`, and click **Import**.
@@ -41,7 +66,7 @@ one.
 5. Click **Deploy**. You'll get a `*.vercel.app` address when it finishes.
 6. To change the production branch: **Settings > Git > Production Branch**.
 
-## Option B: Netlify
+### Option B: Netlify
 
 1. Sign in at app.netlify.com with GitHub.
 2. Choose **Add new site > Import an existing project > GitHub**, then pick

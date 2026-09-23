@@ -1,10 +1,10 @@
 ---
-import { NAV_LINKS, SECTIONS, SITE } from '../config';
+import { NAV_LINKS, SECTIONS, SITE, sectionHref } from '../config';
 ---
 
 <header class="site-header sticky top-0 z-40 border-b border-rule bg-paper">
   <nav aria-label="Main" class="container-page flex h-(--header-h) items-center gap-2 sm:gap-3">
-    <a href={`/#${SECTIONS.hero}`} class="logo mr-auto whitespace-nowrap rounded-sm font-product text-[1.1875rem] sm:text-[1.3rem] font-[580] tracking-[-0.01em] no-underline">
+    <a href={sectionHref(SECTIONS.hero)} class="logo mr-auto whitespace-nowrap rounded-sm font-product text-[1.1875rem] sm:text-[1.3rem] font-[580] tracking-[-0.01em] no-underline">
       {SITE.name}
     </a>
 
@@ -20,7 +20,7 @@ import { NAV_LINKS, SECTIONS, SITE } from '../config';
       }
     </ul>
 
-    <a href={`#${SECTIONS.waitlist}`} class="btn-primary header-cta !min-h-11 !px-3.5 !text-[0.9375rem] md:ml-2">Join the waitlist</a>
+    <a href={sectionHref(SECTIONS.waitlist)} class="btn-primary header-cta !min-h-11 !px-3.5 !text-[0.9375rem] md:ml-2">Join the waitlist</a>
 
     <button
       type="button"
@@ -49,7 +49,7 @@ import { NAV_LINKS, SECTIONS, SITE } from '../config';
         ))
       }
       <li class="py-4">
-        <a href={`#${SECTIONS.waitlist}`} class="btn-primary w-full">Join the waitlist</a>
+        <a href={sectionHref(SECTIONS.waitlist)} class="btn-primary w-full">Join the waitlist</a>
       </li>
     </ul>
   </div>

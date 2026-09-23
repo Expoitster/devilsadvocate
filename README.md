@@ -19,7 +19,7 @@ While `npm run dev` is running, `/_components` shows every voice component. That
 
 Copy `.env.example` to `.env` and set `SITE_URL`, `PUBLIC_FORM_ENDPOINT`, and `PUBLIC_CONTACT_EMAIL`. Until you do, the page shows the literal `{{…}}` placeholders.
 
-Deploying to Vercel or Netlify, with a custom domain: see `docs/deploy.md`.
+Live on GitHub Pages at https://expoitster.github.io/devilsadvocate/ (published by `.github/workflows/pages.yml`). For Vercel, Netlify, or a custom domain, see `docs/deploy.md`.
 
 The share image (`public/og.png`), touch icon, and `favicon.ico` are pre-rendered by `scripts/render-images.cjs`. Re-run it if the headline or icon changes.
 

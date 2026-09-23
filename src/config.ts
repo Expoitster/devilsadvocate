@@ -12,6 +12,11 @@ export const SITE = {
     'Devils Advocate. “I’m skipping placements to build my startup full time.” “Your idea sounds great. That’s what worries us.” Private beta opens December 1, 2026.',
 };
 
+// Site-relative URL that respects Astro's `base` (e.g. /devilsadvocate on
+// GitHub Pages). Pass a path starting with "/".
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
+export const path = (p: string) => `${BASE}${p}`;
+
 // The in-page sections, in page order. Nav links point at these ids.
 export const SECTIONS = {
   hero: 'top',
@@ -25,8 +30,11 @@ export const SECTIONS = {
   waitlist: 'waitlist',
 } as const;
 
+// A link to a home-page section that also works from /privacy/.
+export const sectionHref = (id: string) => path(`/#${id}`);
+
 export const NAV_LINKS = [
-  { label: 'How it works', href: `#${SECTIONS.howItWorks}` },
-  { label: 'What you get', href: `#${SECTIONS.whatYouGet}` },
-  { label: 'FAQ', href: `#${SECTIONS.faq}` },
+  { label: 'How it works', href: sectionHref(SECTIONS.howItWorks) },
+  { label: 'What you get', href: sectionHref(SECTIONS.whatYouGet) },
+  { label: 'FAQ', href: sectionHref(SECTIONS.faq) },
 ];
