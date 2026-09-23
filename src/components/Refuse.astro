@@ -1,0 +1,86 @@
+---
+import { SECTIONS } from '../config';
+
+// Each refusal is a flat statement, then the beat. `then` holds the
+// sentences after it, one per line, so the joke gets its own line.
+const REFUSALS = [
+  { no: 'Tell you what to do.', then: ['We’re a devil’s advocate, not your dad.'] },
+  { no: 'Disagree just for fun.', then: ['We say what’s good about your case first.', 'Contrarian, not a troll.'] },
+  { no: 'Make up quotes.', then: ['Every quote is checked against the actual text.'] },
+  { no: 'Argue about politics.', then: ['We’d like to keep our friends.'] },
+  {
+    no: 'Replace real help.',
+    then: ['If you’re going through something heavy, we drop the debate and point you to people who can help.'],
+  },
+];
+---
+
+<section id={SECTIONS.refuse} aria-labelledby="refuse-heading" class="section container-page">
+  <h2 id="refuse-heading">Things we refuse to do</h2>
+
+  <ul class="refuse" role="list">
+    {
+      REFUSALS.map((r) => (
+        <li class="refuse__row">
+          <span class="refuse__no">{r.no}</span>{' '}
+          <span class="refuse__then">
+            {r.then.map((line) => (
+              <span class="refuse__beat">{line} </span>
+            ))}
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .refuse {
+    margin-top: 2.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .refuse__row {
+    display: grid;
+    gap: 0.375rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--rule);
+    font-family: var(--font-product);
+    letter-spacing: 0.005em;
+  }
+
+  /* The setup is short and firm; the beat that follows is lighter, so the
+     eye lands on it a half-second later. */
+  .refuse__no {
+    font-size: var(--step-1);
+    font-weight: 580;
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+  }
+
+  .refuse__beat {
+    display: block;
+  }
+
+  .refuse__then {
+    max-width: 46ch;
+    font-size: calc(var(--step-0) * 1.06);
+    line-height: 1.5;
+  }
+
+  @media (min-width: 48rem) {
+    .refuse {
+      max-width: 60rem;
+    }
+    .refuse__row {
+      grid-template-columns: 15rem minmax(0, 1fr);
+      align-items: baseline;
+      column-gap: 2.5rem;
+      padding: 1.5rem 0;
+    }
+    .refuse__then {
+      font-size: var(--step-1);
+      line-height: 1.4;
+    }
+  }
+</style>

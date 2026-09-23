@@ -1,0 +1,97 @@
+---
+import UserLine from './UserLine.astro';
+import ProductLine from './ProductLine.astro';
+import { SECTIONS } from '../config';
+---
+
+<section id={SECTIONS.modes} aria-labelledby="modes-heading" class="section container-page">
+  <h2 id="modes-heading" class="max-w-[18ch]">Two ways to get argued with (nicely)</h2>
+
+  <!-- Each mode is an exchange: you say which fight you want, and we say
+       what we'll bring to it. -->
+  <div class="modes">
+    <div class="mode">
+      <UserLine size="lg" bodyAs="div" speaker={false}>
+        <h3 class="mode__name">Challenge my idea</h3>
+      </UserLine>
+      <ProductLine bodyAs="p" speaker={false} class="mode__reply">
+        For the startup, side project, or work proposal you’re about to bet time and money on. We find who tried it
+        before, how it ended, and what would have to be true for you to be different.
+      </ProductLine>
+    </div>
+
+    <p class="modes__or" aria-hidden="true"><span>or</span></p>
+
+    <div class="mode">
+      <UserLine size="lg" bodyAs="div" speaker={false}>
+        <h3 class="mode__name">Challenge my decision</h3>
+      </UserLine>
+      <ProductLine bodyAs="p" speaker={false} class="mode__reply">
+        For the big calls. Skip placements? Take the offer? Move cities? We bring what the great thinkers argued on both
+        sides, with the page number, so it’s not just vibes.
+      </ProductLine>
+    </div>
+  </div>
+</section>
+
+<style>
+  .modes {
+    display: grid;
+    margin-top: 3rem;
+  }
+
+  .mode {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* The mode name is what you'd say, so it is set in your voice. */
+  .mode__name {
+    font-family: var(--font-user);
+    font-size: inherit;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+  }
+
+  /* "or": a hairline with the word sitting on it. */
+  .modes__or {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0;
+    font-size: var(--step--1);
+    color: var(--ink-muted);
+  }
+  .modes__or::before,
+  .modes__or::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+  .modes__or::before {
+    flex: 0 0 2rem;
+  }
+
+  @media (min-width: 48rem) {
+    .modes {
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      column-gap: clamp(1.5rem, 3vw, 3rem);
+      margin-top: 3.5rem;
+    }
+    .modes__or {
+      flex-direction: column;
+      margin: 0;
+    }
+    .modes__or::before,
+    .modes__or::after {
+      width: 1px;
+      height: auto;
+    }
+    .modes__or::before {
+      flex: 0 0 1.25rem;
+    }
+  }
+</style>

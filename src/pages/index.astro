@@ -1,43 +1,29 @@
 ---
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
+import Why from '../components/Why.astro';
+import Modes from '../components/Modes.astro';
+import Bring from '../components/Bring.astro';
+import WhatYouGet from '../components/WhatYouGet.astro';
+import Refuse from '../components/Refuse.astro';
+import Faq from '../components/Faq.astro';
 import SectionPlaceholder from '../components/SectionPlaceholder.astro';
 import { SECTIONS } from '../config';
 ---
 
 <Base>
   <Hero />
-  <SectionPlaceholder
-    id={SECTIONS.why}
-    heading="The people who love you are terrible at this."
-    note="Why this exists: the other voices, and survivorship bias."
-  />
-  <SectionPlaceholder
-    id={SECTIONS.modes}
-    heading="Two ways to get argued with (nicely)"
-    note="Two modes: Challenge my idea and Challenge my decision."
-  />
-  <SectionPlaceholder
-    id={SECTIONS.bring}
-    heading="What you can bring"
-    note="Four things to bring: startup ideas, big life decisions, work proposals, philosophy and beliefs."
-  />
+  <Why />
+  <Modes />
+  <Bring />
   <SectionPlaceholder
     id={SECTIONS.howItWorks}
     heading="Here's exactly what will happen when you show up"
     note="How it works: mode toggle, 7-step click-through, phone mockup."
   />
-  <SectionPlaceholder
-    id={SECTIONS.whatYouGet}
-    heading="The hand-back card"
-    note="What you get: the list, and a static mock of the card."
-  />
-  <SectionPlaceholder
-    id={SECTIONS.refuse}
-    heading="Things we refuse to do"
-    note="What we won't do: five refusals."
-  />
-  <SectionPlaceholder id={SECTIONS.faq} heading="FAQ" note="Seven questions in your voice, answers in ours." />
+  <WhatYouGet />
+  <Refuse />
+  <Faq />
   <SectionPlaceholder
     id={SECTIONS.waitlist}
     heading="Got an idea you're completely sure about? Perfect."

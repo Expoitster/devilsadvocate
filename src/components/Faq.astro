@@ -1,0 +1,137 @@
+---
+import UserLine from './UserLine.astro';
+import ProductLine from './ProductLine.astro';
+import { CONTACT_EMAIL, SECTIONS } from '../config';
+---
+
+<section id={SECTIONS.faq} aria-labelledby="faq-heading" class="section container-page">
+  <div class="split">
+    <h2 id="faq-heading" class="split__head">FAQ</h2>
+
+    <!-- Native <details>: opens and closes with no JavaScript. Questions are
+         your voice, answers are ours. -->
+    <div class="faq split__body">
+      <details class="faq__item" open>
+        <summary class="faq__q">
+          <UserLine as="span" bodyAs="span" speaker={false}>Isn’t this just ChatGPT with an attitude?</UserLine>
+        </summary>
+        <ProductLine speaker={false} class="faq__a">
+          Most chatbots are trained to be agreeable. We’re built to find the other side, and we bring receipts: a curated
+          database of failed startups and the actual texts of philosophers, with every quote checked.
+        </ProductLine>
+      </details>
+
+      <details class="faq__item">
+        <summary class="faq__q">
+          <UserLine as="span" bodyAs="span" speaker={false}>Does it just disagree with everything?</UserLine>
+        </summary>
+        <ProductLine speaker={false} class="faq__a">
+          No. It tells you what’s strong first, then the strongest other side. Then it steps aside.
+        </ProductLine>
+      </details>
+
+      <details class="faq__item">
+        <summary class="faq__q">
+          <UserLine as="span" bodyAs="span" speaker={false}>What if I’m actually right?</UserLine>
+        </summary>
+        <ProductLine speaker={false} class="faq__a">
+          Then you walk away more sure, with the counterarguments already handled. That’s a win.
+        </ProductLine>
+      </details>
+
+      <details class="faq__item">
+        <summary class="faq__q">
+          <UserLine as="span" bodyAs="span" speaker={false}>Do I have to talk? I’m shy.</UserLine>
+        </summary>
+        <ProductLine speaker={false} class="faq__a">
+          Type if you prefer. The mic is for people who think out loud.
+        </ProductLine>
+      </details>
+
+      <details class="faq__item">
+        <summary class="faq__q">
+          <UserLine as="span" bodyAs="span" speaker={false}>Who is it for?</UserLine>
+        </summary>
+        <ProductLine speaker={false} class="faq__a">
+          MBA students, first-time founders, and anyone about to make a call they’d hate to get wrong.
+        </ProductLine>
+      </details>
+
+      <details class="faq__item">
+        <summary class="faq__q">
+          <UserLine as="span" bodyAs="span" speaker={false}>Can I use it right now?</UserLine>
+        </summary>
+        <ProductLine speaker={false} class="faq__a">
+          Not yet. Private beta opens <time datetime="2026-12-01">December 1, 2026</time>, and the waitlist gets in
+          first.
+        </ProductLine>
+      </details>
+
+      <details class="faq__item">
+        <summary class="faq__q">
+          <UserLine as="span" bodyAs="span" speaker={false}>What do you do with my waitlist details?</UserLine>
+        </summary>
+        <ProductLine speaker={false} class="faq__a">
+          We use them only to invite you to the beta. Email <a class="faq__mail" href={`mailto:${CONTACT_EMAIL}`}
+            >{CONTACT_EMAIL}</a
+          > and we’ll delete them.
+        </ProductLine>
+      </details>
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq {
+    border-top: 1px solid var(--rule);
+  }
+
+  .faq__item {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .faq__q {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 3rem;
+    padding: 1.125rem 0;
+    cursor: pointer;
+    list-style: none;
+    font-weight: 500;
+  }
+  .faq__q::-webkit-details-marker {
+    display: none;
+  }
+  .faq__q:hover :global(.line__body) {
+    text-decoration: underline;
+    text-decoration-color: var(--rule);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
+  }
+
+  /* Plus that turns into a minus: two bars, one of which folds away. */
+  .faq__q::after {
+    content: '';
+    flex: none;
+    width: 0.875rem;
+    height: 0.875rem;
+    margin-top: 0.45em;
+    background:
+      linear-gradient(currentColor, currentColor) center / 100% 1.75px no-repeat,
+      linear-gradient(currentColor, currentColor) center / 1.75px 100% no-repeat;
+  }
+  .faq__item[open] > .faq__q::after {
+    background: linear-gradient(currentColor, currentColor) center / 100% 1.75px no-repeat;
+  }
+
+  .faq__item :global(.faq__a) {
+    padding-bottom: 1.5rem;
+  }
+
+  .faq__mail {
+    text-decoration-line: underline;
+    overflow-wrap: anywhere;
+  }
+</style>

@@ -1,0 +1,213 @@
+---
+/**
+ * A static mock of the hand-back card, filled with the idea-mode example
+ * from docs/copy.md (hostel food delivery). The one "card" on the page:
+ * it should look like something you'd screenshot and send to a friend.
+ */
+import UserLine from './UserLine.astro';
+import Receipt from './Receipt.astro';
+
+const COUNTERPOINTS = [
+  { source: 'HostelBites, 2017–2019', point: 'Couldn’t cover delivery costs on small orders.' },
+  { source: 'CampusCart, 2018–2020', point: 'Saw orders collapse every vacation.' },
+  { source: 'MessMate, 2016–2018', point: 'Lost to the hostel’s own mess contract.' },
+];
+
+const OPEN_QUESTIONS = [
+  'Does demand survive 3 months of holidays a year?',
+  'Would parents prepay a semester?',
+  'Why won’t hostels just call the local dhaba?',
+];
+---
+
+<article class="hbc" aria-labelledby="hbc-title">
+  <header class="hbc__head">
+    <p id="hbc-title" class="hbc__title">Hand-back card</p>
+    <p class="hbc__mode">Challenge my idea</p>
+  </header>
+
+  <div class="hbc__part">
+    <h3 class="hbc__label">Your position</h3>
+    <UserLine size="sm" speaker={false} class="hbc__position">
+      Food delivery for college hostels. Swiggy did it, so there’s clearly demand.
+    </UserLine>
+  </div>
+
+  <div class="hbc__part">
+    <h3 class="hbc__label">Toughest counterpoints</h3>
+    <ol class="hbc__counter" role="list">
+      {
+        COUNTERPOINTS.map((c) => (
+          <li>
+            <p class="hbc__point">{c.point}</p>
+            <Receipt>{c.source}</Receipt>
+          </li>
+        ))
+      }
+    </ol>
+    <p class="hbc__note">Illustrative examples for this demo</p>
+  </div>
+
+  <div class="hbc__part">
+    <h3 class="hbc__label">What’s genuinely strong</h3>
+    <p class="hbc__prose">Captive audience, dense delivery routes, cheap marketing through hostel groups.</p>
+  </div>
+
+  <div class="hbc__part">
+    <h3 class="hbc__label">Open questions only you can answer</h3>
+    <ul class="hbc__questions" role="list">
+      {OPEN_QUESTIONS.map((q) => <li>{q}</li>)}
+    </ul>
+  </div>
+
+  <div class="hbc__part">
+    <h3 class="hbc__label">Cheapest test this month</h3>
+    <p class="hbc__prose">Ask hostel parents if they’d prepay a semester of breakfasts.</p>
+  </div>
+
+  <footer class="hbc__foot">
+    <span class="hbc__brand">Devils Advocate</span>
+    <span>Your call. Always.</span>
+  </footer>
+</article>
+
+<style>
+  .hbc {
+    --hbc-pad: clamp(1.125rem, 0.8rem + 1.4vw, 1.75rem);
+    position: relative;
+    width: 100%;
+    max-width: 30rem;
+    overflow: hidden;
+    border: 1.5px solid var(--ink);
+    border-radius: 0.875rem;
+    background: var(--surface);
+    color: var(--ink);
+    /* A flat, printed-looking offset rather than a soft glow. */
+    box-shadow: 0.5rem 0.5rem 0 color-mix(in srgb, var(--ink) 12%, transparent);
+  }
+
+  @media (min-width: 64rem) {
+    .hbc {
+      transform: rotate(-1.25deg);
+    }
+  }
+
+  .hbc__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.25rem 1rem;
+    padding: 1rem var(--hbc-pad);
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .hbc__title {
+    font-family: var(--font-product);
+    font-size: var(--step-2);
+    font-weight: 580;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  .hbc__mode {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .hbc__part {
+    padding: 1.125rem var(--hbc-pad);
+  }
+  .hbc__part + .hbc__part {
+    border-top: 1px dashed color-mix(in srgb, var(--ink) 28%, transparent);
+  }
+
+  .hbc__label {
+    margin-bottom: 0.5rem;
+    font-family: var(--font-user);
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0;
+    color: var(--ink-muted);
+  }
+
+  .hbc :global(.hbc__position) {
+    font-size: 1.0625rem !important;
+    font-weight: 500;
+  }
+
+  .hbc__counter {
+    display: grid;
+    gap: 0.875rem;
+    counter-reset: point;
+  }
+  .hbc__counter li {
+    position: relative;
+    padding-left: 1.75rem;
+    counter-increment: point;
+  }
+  .hbc__counter li::before {
+    content: counter(point);
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-family: var(--font-product);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--devil);
+  }
+
+  .hbc__point,
+  .hbc__prose,
+  .hbc__questions {
+    font-family: var(--font-product);
+    font-size: 1.0625rem;
+    line-height: 1.45;
+    letter-spacing: 0.005em;
+  }
+  .hbc__point {
+    margin-bottom: 0.3rem;
+  }
+
+  .hbc__note {
+    margin-top: 0.875rem;
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+  }
+
+  .hbc__questions {
+    display: grid;
+    gap: 0.375rem;
+  }
+  .hbc__questions li {
+    position: relative;
+    padding-left: 1.75rem;
+  }
+  .hbc__questions li::before {
+    content: '?';
+    position: absolute;
+    left: 0.1rem;
+    font-weight: 600;
+    color: var(--you);
+  }
+
+  .hbc__foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.25rem 1rem;
+    padding: 0.875rem var(--hbc-pad);
+    border-top: 1.5px solid var(--ink);
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .hbc__brand {
+    font-family: var(--font-product);
+    font-size: 1rem;
+    font-weight: 580;
+  }
+</style>

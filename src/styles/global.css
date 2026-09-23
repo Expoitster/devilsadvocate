@@ -232,6 +232,28 @@
     text-decoration-color: currentColor;
   }
 
+  /* Section rhythm: half the gap above and below, so neighbours add up to
+     one full gap. */
+  .section {
+    padding-block: calc(var(--section-gap) / 2);
+  }
+
+  /* Heading on the left, content on the right, from desktop up. */
+  .split {
+    display: grid;
+    gap: 2rem;
+  }
+  .split__head {
+    max-width: 18ch;
+  }
+  @media (min-width: 64rem) {
+    .split {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      column-gap: clamp(3rem, 6vw, 6rem);
+      align-items: start;
+    }
+  }
+
   .sr-only-text {
     position: absolute;
     width: 1px;

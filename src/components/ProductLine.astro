@@ -6,8 +6,9 @@ import type { HTMLAttributes } from 'astro/types';
  * Pass `speaker={false}` where the context already says who is talking.
  */
 interface Props extends Omit<HTMLAttributes<'div'>, 'class'> {
-  as?: 'div' | 'li';
-  bodyAs?: 'p' | 'div';
+  /** Use `span` inside phrasing-only parents such as <summary>. */
+  as?: 'div' | 'li' | 'span';
+  bodyAs?: 'p' | 'div' | 'span';
   size?: 'sm' | 'md' | 'lg';
   speaker?: string | false;
   class?: string;

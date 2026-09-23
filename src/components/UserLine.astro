@@ -7,8 +7,9 @@ import type { HTMLAttributes } from 'astro/types';
  * (an FAQ question, for example) so screen readers don't hear it twice.
  */
 interface Props extends Omit<HTMLAttributes<'div'>, 'class'> {
-  as?: 'div' | 'li';
-  bodyAs?: 'p' | 'div';
+  /** Use `span` inside phrasing-only parents such as <summary>. */
+  as?: 'div' | 'li' | 'span';
+  bodyAs?: 'p' | 'div' | 'span';
   size?: 'sm' | 'md' | 'lg';
   speaker?: string | false;
   class?: string;

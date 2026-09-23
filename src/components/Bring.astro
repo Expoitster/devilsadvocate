@@ -1,0 +1,61 @@
+---
+import { SECTIONS } from '../config';
+
+const ITEMS = [
+  { what: 'Startup ideas', quip: 'Before you pitch it, bury it (on paper).' },
+  { what: 'Big life decisions', quip: 'Quit, stay, move, or marry the startup.' },
+  { what: 'Work proposals', quip: 'Stress-test the strategy before your boss does.' },
+  { what: 'Philosophy and beliefs', quip: 'Argue with Aristotle. He’s had time to prepare.' },
+];
+---
+
+<section id={SECTIONS.bring} aria-labelledby="bring-heading" class="section container-page">
+  <div class="split">
+    <h2 id="bring-heading" class="split__head">What you can bring</h2>
+
+    <dl class="bring split__body">
+      {
+        ITEMS.map((item) => (
+          <div class="bring__row">
+            <dt class="bring__what">{item.what}</dt>
+            <dd class="bring__quip">{item.quip}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<style>
+  .bring {
+    border-top: 1px solid var(--rule);
+  }
+
+  .bring__row {
+    display: grid;
+    gap: 0.25rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* What you bring is in your voice; our one-liner back is in ours. */
+  .bring__what {
+    font-weight: 600;
+  }
+
+  .bring__quip {
+    font-family: var(--font-product);
+    font-size: var(--step-1);
+    line-height: 1.4;
+    letter-spacing: 0.005em;
+  }
+
+  @media (min-width: 48rem) {
+    .bring__row {
+      grid-template-columns: 13rem minmax(0, 1fr);
+      align-items: baseline;
+      column-gap: 2rem;
+      padding: 1.5rem 0;
+    }
+  }
+</style>

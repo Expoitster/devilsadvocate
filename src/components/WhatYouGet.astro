@@ -1,0 +1,85 @@
+---
+import HandBackCard from './HandBackCard.astro';
+import { SECTIONS } from '../config';
+---
+
+<section id={SECTIONS.whatYouGet} aria-labelledby="get-heading" class="section container-page">
+  <div class="get">
+    <div class="get__copy">
+      <h2 id="get-heading">The hand-back card</h2>
+      <p class="get__intro">Every session ends with one card that’s yours to keep:</p>
+      <ul class="get__list" role="list">
+        <li>Your position, in one line</li>
+        <li>The 3 toughest counterpoints, each with its source</li>
+        <li>What’s genuinely strong in your case</li>
+        <li>The open questions only you can answer</li>
+        <li>The cheapest test you can run this month</li>
+      </ul>
+      <p class="get__kicker">No verdict. We don’t do verdicts. We do homework.</p>
+    </div>
+
+    <div class="get__card">
+      <HandBackCard />
+    </div>
+  </div>
+</section>
+
+<style>
+  .get {
+    display: grid;
+    gap: 3rem;
+  }
+
+  .get__intro {
+    margin-top: 1.25rem;
+    max-width: var(--measure);
+  }
+
+  .get__list {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .get__list li {
+    position: relative;
+    padding-left: 1.5rem;
+  }
+  .get__list li::before {
+    content: '';
+    position: absolute;
+    left: 0.25rem;
+    top: 0.78em;
+    width: 0.625rem;
+    height: 1.5px;
+    background: var(--ink-muted);
+  }
+
+  /* The product gets the last word, in its own voice. */
+  .get__kicker {
+    margin-top: 2rem;
+    max-width: 24ch;
+    font-family: var(--font-product);
+    font-size: var(--step-2);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  /* Leave room for the card's offset shadow so it never touches the edge. */
+  .get__card {
+    padding-right: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  @media (min-width: 64rem) {
+    .get {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      column-gap: clamp(3rem, 6vw, 6rem);
+      align-items: center;
+    }
+    .get__card {
+      display: flex;
+      justify-content: center;
+    }
+  }
+</style>

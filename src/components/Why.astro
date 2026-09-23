@@ -1,0 +1,52 @@
+---
+import { SECTIONS } from '../config';
+---
+
+<section id={SECTIONS.why} aria-labelledby="why-heading" class="section container-page">
+  <div class="split">
+    <h2 id="why-heading" class="split__head">The people who love you are terrible at this.</h2>
+
+    <div class="split__body">
+      <!-- Everyone else's opinion, one per line and in a muted voice: none
+           of them get a speech mark, because none of them bring sources. -->
+      <p class="why__voices">
+        <span>Your friends say it’s genius.</span>
+        <span>Your parents say be careful.</span>
+        <span>LinkedIn says quit your job.</span>
+        <span class="why__verdict">Nobody shows their sources.</span>
+      </p>
+
+      <p class="why__body">
+        For every Zomato, there’s a graveyard of food apps nobody remembers. That’s survivorship bias: you only hear
+        from the ones who made it, because the ones who didn’t aren’t posting about it. We give tours of the graveyard,
+        so you don’t have to move in.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .why__voices {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: var(--step-1);
+    line-height: 1.35;
+    color: var(--ink-muted);
+  }
+
+  .why__verdict {
+    margin-top: 0.75rem;
+    font-family: var(--font-product);
+    font-size: var(--step-2);
+    font-weight: 540;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  .why__body {
+    margin-top: 2rem;
+    max-width: var(--measure);
+  }
+</style>
