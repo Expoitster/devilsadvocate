@@ -1,0 +1,112 @@
+---
+/**
+ * A static phone screen for illustrative mockups. It holds markup only:
+ * nothing inside it is a working control.
+ */
+interface Props {
+  /** Describes the mockup for assistive tech, e.g. "Mockup: step 3 in idea mode". */
+  label: string;
+  /** App bar title. */
+  title?: string;
+  /** Small line under the title, e.g. the mode. */
+  subtitle?: string;
+  /** Visible caption under the frame. */
+  caption?: string;
+  class?: string;
+}
+
+const { label, title = 'Devils Advocate', subtitle, caption, class: className } = Astro.props;
+---
+
+<figure class:list={['phone', className]} aria-label={label}>
+  <div class="phone__bezel">
+    <div class="phone__screen">
+      <div class="phone__notch" aria-hidden="true"></div>
+      <div class="phone__bar">
+        <p class="phone__title">{title}</p>
+        {subtitle && <p class="phone__subtitle">{subtitle}</p>}
+      </div>
+      <div class="phone__body">
+        <slot />
+      </div>
+      {
+        Astro.slots.has('bottom') && (
+          <div class="phone__bottom">
+            <slot name="bottom" />
+          </div>
+        )
+      }
+    </div>
+  </div>
+  {caption && <figcaption class="phone__caption">{caption}</figcaption>}
+</figure>
+
+<style>
+  .phone {
+    width: min(100%, 21rem);
+    margin: 0;
+  }
+
+  .phone__bezel {
+    padding: 0.625rem;
+    border-radius: 2.5rem;
+    background: var(--frame);
+  }
+
+  .phone__screen {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 34rem;
+    overflow: hidden;
+    border-radius: 1.875rem;
+    background: var(--surface);
+    color: var(--ink);
+  }
+
+  .phone__notch {
+    width: 5.5rem;
+    height: 1.375rem;
+    margin: 0.5rem auto 0;
+    border-radius: 999px;
+    background: var(--frame);
+  }
+
+  .phone__bar {
+    padding: 0.75rem 1.125rem 0.75rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .phone__title {
+    font-family: var(--font-product);
+    font-size: 1.0625rem;
+    font-weight: 580;
+    line-height: 1.3;
+  }
+
+  .phone__subtitle {
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: var(--ink-muted);
+  }
+
+  .phone__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.875rem;
+    padding: 1rem 1.125rem 1.25rem 0.875rem;
+  }
+
+  .phone__bottom {
+    padding: 0.75rem 1rem 1.125rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .phone__caption {
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: var(--ink-muted);
+  }
+</style>

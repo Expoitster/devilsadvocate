@@ -1,0 +1,144 @@
+---
+import { NAV_LINKS, SECTIONS, SITE } from '../config';
+---
+
+<header class="site-header sticky top-0 z-40 border-b border-rule bg-paper">
+  <nav aria-label="Main" class="container-page flex h-(--header-h) items-center gap-2 sm:gap-3">
+    <a href={`/#${SECTIONS.hero}`} class="logo mr-auto whitespace-nowrap rounded-sm font-product text-[1.1875rem] sm:text-[1.3rem] font-[580] tracking-[-0.01em] no-underline">
+      {SITE.name}
+    </a>
+
+    <ul class="hidden items-center gap-1 md:flex" role="list">
+      {
+        NAV_LINKS.map((link) => (
+          <li>
+            <a href={link.href} class="nav-link inline-flex min-h-11 items-center rounded-sm px-3 font-medium no-underline">
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <a href={`#${SECTIONS.waitlist}`} class="btn-primary header-cta !min-h-11 !px-3.5 !text-[0.9375rem] md:ml-2">Join the waitlist</a>
+
+    <button
+      type="button"
+      class="menu-toggle inline-flex size-11 shrink-0 items-center justify-center rounded-control border border-rule md:hidden"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      aria-label="Menu"
+      hidden
+    >
+      <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round">
+        <path class="bar bar--top" d="M3 6h14" />
+        <path class="bar bar--bottom" d="M3 14h14" />
+      </svg>
+    </button>
+  </nav>
+
+  <div id="mobile-menu" class="mobile-menu border-t border-rule bg-paper md:hidden">
+    <ul class="container-page flex flex-col py-2" role="list">
+      {
+        NAV_LINKS.map((link) => (
+          <li>
+            <a href={link.href} class="flex min-h-12 items-center border-b border-rule text-step-1 font-medium no-underline">
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+      <li class="py-4">
+        <a href={`#${SECTIONS.waitlist}`} class="btn-primary w-full">Join the waitlist</a>
+      </li>
+    </ul>
+  </div>
+</header>
+
+<style>
+  .nav-link:hover,
+  .logo:hover {
+    text-decoration-line: underline;
+    text-decoration-color: var(--rule);
+    text-decoration-thickness: 2px;
+  }
+
+  /* Two bars become a cross while the menu is open. */
+  .bar {
+    transform-origin: 10px 10px;
+    transition: transform 160ms ease;
+  }
+  .menu-toggle[aria-expanded='true'] .bar--top {
+    transform: translateY(4px) rotate(45deg);
+  }
+  .menu-toggle[aria-expanded='true'] .bar--bottom {
+    transform: translateY(-4px) rotate(-45deg);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bar {
+      transition: none;
+    }
+  }
+
+  /* The header button needs room next to the logo and the menu button.
+     Below 370px it lives inside the menu instead. */
+  .header-cta {
+    display: none;
+  }
+  @media (min-width: 23.125rem) {
+    .header-cta {
+      display: inline-flex;
+    }
+  }
+
+  /* Without JavaScript the links stay in view as a plain list. With it,
+     the list becomes a dropdown under the header. */
+  :global(.js) .mobile-menu {
+    position: absolute;
+    inset-inline: 0;
+    top: 100%;
+    display: none;
+    border-bottom: 1px solid var(--rule);
+  }
+  :global(.js) .mobile-menu[data-open] {
+    display: block;
+  }
+  @media (min-width: 48rem) {
+    .mobile-menu {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+
+  if (toggle && menu) {
+    toggle.hidden = false;
+
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      menu.toggleAttribute('data-open', open);
+    };
+
+    toggle.addEventListener('click', () => {
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    menu.addEventListener('click', (event) => {
+      if ((event.target as Element).closest('a')) setOpen(false);
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    matchMedia('(min-width: 48rem)').addEventListener('change', (query) => {
+      if (query.matches) setOpen(false);
+    });
+  }
+</script>

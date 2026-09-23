@@ -1,0 +1,17 @@
+---
+/**
+ * An inline citation chip on the highlighter background. Yellow means
+ * "this is evidence", so don't use this for anything else.
+ */
+interface Props {
+  href?: string;
+  /** Read before the chip's text by screen readers. */
+  srLabel?: string | false;
+  class?: string;
+}
+
+const { href, srLabel = 'Source', class: className } = Astro.props;
+const Tag = href ? 'a' : 'span';
+---
+
+<Tag class:list={['receipt', className]} href={href}>{srLabel && <span class="sr-only-text">{srLabel}: </span>}<slot /></Tag>

@@ -186,3 +186,9 @@ Send failed: Something broke on our side, and it's not your idea's fault. Try ag
 ## Footer
 Built by Avinash G, an MBA student who heard "great idea" one too many times.
 Links: Privacy (a short static page: we collect your email and waitlist answers only to invite you to the beta; they are stored with our form provider; email {{CONTACT_EMAIL}} to have them deleted).
+
+# REPO NOTES (added during setup)
+- Run `npm run dev` (http://localhost:4321), `npm run build`, and `npm run check`. `/_components` is a dev-only preview of the voice components.
+- Tokens, type scale, and voice styles live in `src/styles/global.css`. Tailwind's default palette is cleared, so only the token colors exist as utilities (`bg-paper`, `text-devil`, `text-step-1`, `text-display`, ...).
+- Use `UserLine`, `ProductLine`, `Receipt`, and `PhoneFrame` from `src/components/` for anything conversational. Don't restyle speech marks per section.
+- Section ids and nav links live in `src/config.ts`. `{{FORM_ENDPOINT}}` and `{{CONTACT_EMAIL}}` come from `PUBLIC_FORM_ENDPOINT` and `PUBLIC_CONTACT_EMAIL`.

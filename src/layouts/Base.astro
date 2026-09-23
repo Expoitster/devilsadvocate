@@ -1,0 +1,51 @@
+---
+import '@fontsource-variable/fraunces/opsz.css';
+import '@fontsource-variable/bricolage-grotesque/opsz.css';
+import '../styles/global.css';
+// Preload the Latin files: the h1 is set in Fraunces and is the page's LCP.
+import frauncesLatin from '@fontsource-variable/fraunces/files/fraunces-latin-opsz-normal.woff2?url';
+import bricolageLatin from '@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-opsz-normal.woff2?url';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { SITE } from '../config';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = SITE.description } = Astro.props;
+const pageTitle = title ? `${title} | ${SITE.name}` : `${SITE.name}: your idea sounds great. That's what worries us.`;
+---
+
+<!doctype html>
+<html lang="en-IN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#F1F3F8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#141830" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href={frauncesLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={bricolageLatin} as="font" type="font/woff2" crossorigin />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+  </head>
+  <body>
+    <a
+      href="#main"
+      class="fixed left-gutter top-2 z-50 -translate-y-[200%] rounded-control bg-ink px-4 py-3 font-semibold text-paper focus:translate-y-0"
+      >Skip to content</a
+    >
+    <Nav />
+    <main id="main" tabindex="-1" class="outline-none">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

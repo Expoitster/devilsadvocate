@@ -1,0 +1,345 @@
+@import 'tailwindcss';
+
+/* Dark mode follows the system setting only; there is no toggle. */
+@custom-variant dark (@media (prefers-color-scheme: dark));
+
+/* ------------------------------------------------------------------ */
+/* Tokens                                                              */
+/* ------------------------------------------------------------------ */
+
+:root {
+  color-scheme: light dark;
+
+  /* Color: the brief's palette. Yellow is reserved for cited evidence. */
+  --paper: #f1f3f8;
+  --surface: #ffffff;
+  --ink: #1a1f36;
+  --ink-muted: #5a6078;
+  --devil: #b3124e;
+  --devil-hover: #960e41;
+  --on-devil: #ffffff;
+  --you: #13766a;
+  --receipt: #f5d547;
+  --receipt-bg: var(--receipt);
+  --rule: rgb(26 31 54 / 0.14);
+  --frame: #1a1f36;
+
+  /* Type scale: 17px x 1.25 at 360px, easing to 18px x 1.333 at 1280px. */
+  --step--1: 0.875rem;
+  --step-0: clamp(1.0625rem, 1.038rem + 0.1087vw, 1.125rem);
+  --step-1: clamp(1.3281rem, 1.261rem + 0.2983vw, 1.4996rem);
+  --step-2: clamp(1.6602rem, 1.5276rem + 0.5893vw, 1.999rem);
+  --step-3: clamp(2.0752rem, 1.8445rem + 1.0252vw, 2.6647rem);
+  --step-4: clamp(2.594rem, 2.2191rem + 1.6661vw, 3.552rem);
+  /* The h1 runs from step 4 on phones to step 5 on desktop. */
+  --step-display: clamp(2.5938rem, 1.7558rem + 3.7239vw, 4.7348rem);
+
+  /* Space */
+  --gutter: clamp(1.25rem, 0.5652rem + 3.0435vw, 3rem);
+  --section-gap: clamp(6rem, 4.4348rem + 6.9565vw, 10rem);
+  --indent: clamp(1.5rem, 0.913rem + 2.6087vw, 3rem);
+  --measure: 62ch;
+  --header-h: 3.5rem;
+
+  --radius-control: 6px;
+  --radius-chip: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #141830;
+    --surface: #1d2240;
+    --ink: #e8eaf3;
+    --ink-muted: #a3a8c3;
+    --devil: #ff5c8a;
+    --devil-hover: #ff7fa3;
+    /* White on #FF5C8A is 2.9:1, so buttons carry dark text in dark mode. */
+    --on-devil: #141830;
+    --you: #3cc9b5;
+    --receipt: #e8c63a;
+    --receipt-bg: rgb(232 198 58 / 0.35);
+    --rule: rgb(232 234 243 / 0.16);
+    --frame: #2a3060;
+  }
+}
+
+/* Map the tokens into Tailwind. The default palette is cleared so only
+   these colors exist as utilities. */
+@theme inline {
+  --color-*: initial;
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-devil: var(--devil);
+  --color-devil-hover: var(--devil-hover);
+  --color-on-devil: var(--on-devil);
+  --color-you: var(--you);
+  --color-receipt: var(--receipt);
+  --color-receipt-bg: var(--receipt-bg);
+  --color-rule: var(--rule);
+  --color-frame: var(--frame);
+
+  --font-product: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
+  --font-user: 'Bricolage Grotesque Variable', ui-sans-serif, system-ui, sans-serif;
+
+  --text-step-n1: var(--step--1);
+  --text-step-n1--line-height: 1.45;
+  --text-step-0: var(--step-0);
+  --text-step-0--line-height: 1.55;
+  --text-step-1: var(--step-1);
+  --text-step-1--line-height: 1.4;
+  --text-step-2: var(--step-2);
+  --text-step-2--line-height: 1.25;
+  --text-step-3: var(--step-3);
+  --text-step-3--line-height: 1.12;
+  --text-step-4: var(--step-4);
+  --text-step-4--line-height: 1.06;
+  --text-display: var(--step-display);
+  --text-display--line-height: 1.04;
+
+  --spacing-gutter: var(--gutter);
+  --spacing-section: var(--section-gap);
+  --spacing-indent: var(--indent);
+  --max-width-measure: var(--measure);
+
+  --radius-control: var(--radius-control);
+  --radius-chip: var(--radius-chip);
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                */
+/* ------------------------------------------------------------------ */
+
+@layer base {
+  html {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-user);
+    font-size: 100%;
+    font-optical-sizing: auto;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-padding-top: calc(var(--header-h) + 1rem);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    min-height: 100dvh;
+    font-size: var(--step-0);
+    line-height: 1.55;
+    background: var(--paper);
+  }
+
+  /* Headings are the product speaking, so they are set in Fraunces. */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-product);
+    font-optical-sizing: auto;
+    text-wrap: balance;
+    color: var(--ink);
+  }
+  h1 {
+    font-size: var(--step-display);
+    line-height: 1.04;
+    font-weight: 560;
+    letter-spacing: -0.02em;
+  }
+  h2 {
+    font-size: var(--step-3);
+    line-height: 1.12;
+    font-weight: 540;
+    letter-spacing: -0.015em;
+  }
+  h3 {
+    font-size: var(--step-1);
+    line-height: 1.3;
+    font-weight: 540;
+    letter-spacing: -0.005em;
+  }
+
+  p,
+  li,
+  dd {
+    text-wrap: pretty;
+  }
+
+  a {
+    color: inherit;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  ::selection {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  /* One focus style everywhere: never yellow, so yellow stays evidence. */
+  :focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Components that are shared by many templates                        */
+/* ------------------------------------------------------------------ */
+
+@layer components {
+  .container-page {
+    width: 100%;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3rem;
+    padding: 0 1.25rem;
+    border-radius: var(--radius-control);
+    background: var(--devil);
+    color: var(--on-devil);
+    font-family: var(--font-user);
+    font-size: var(--step-0);
+    font-weight: 600;
+    line-height: 1.2;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 120ms ease;
+  }
+  .btn-primary:hover {
+    background: var(--devil-hover);
+  }
+
+  .link-quiet {
+    font-weight: 500;
+    text-decoration-line: underline;
+    text-decoration-color: var(--rule);
+    text-decoration-thickness: 2px;
+  }
+  .link-quiet:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .sr-only-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* The two voices (UserLine, ProductLine)                              */
+/* ------------------------------------------------------------------ */
+
+@layer components {
+  .line {
+    --line-indent: var(--indent);
+    display: grid;
+    grid-template-columns: 1.15em minmax(0, 1fr);
+    align-items: start;
+    max-width: var(--measure);
+  }
+
+  .line__mark {
+    font-size: 1.7em;
+    line-height: 1;
+    font-weight: 700;
+    /* Sit the mark on the first line's cap height rather than its box. */
+    margin-top: -0.02em;
+    user-select: none;
+  }
+
+  .line__body > :where(p, ul, ol) + :where(p, ul, ol) {
+    margin-top: 0.5em;
+  }
+
+  /* The user: Bricolage, flush left, teal speech mark. */
+  .line--user {
+    font-family: var(--font-user);
+    font-weight: 450;
+    line-height: 1.45;
+  }
+  .line--user .line__mark {
+    color: var(--you);
+    font-family: var(--font-user);
+  }
+
+  /* The product: Fraunces, indented, raspberry speech mark. Fraunces has a
+     smaller x-height than Bricolage, so it runs ~6% larger, and it gets a
+     slightly more open line-height and tracking. */
+  .line--product {
+    margin-inline-start: var(--line-indent);
+    font-family: var(--font-product);
+    font-optical-sizing: auto;
+    font-weight: 400;
+    line-height: 1.55;
+    letter-spacing: 0.005em;
+  }
+  .line--product .line__mark {
+    color: var(--devil);
+    font-family: var(--font-product);
+  }
+
+  .line--sm {
+    --line-indent: 0.875rem;
+  }
+  .line--user.line--sm {
+    font-size: 0.9375rem;
+  }
+  .line--product.line--sm {
+    font-size: 1rem;
+  }
+  .line--user.line--md {
+    font-size: var(--step-0);
+  }
+  .line--product.line--md {
+    font-size: calc(var(--step-0) * 1.06);
+  }
+  .line--user.line--lg {
+    font-size: var(--step-1);
+  }
+  .line--product.line--lg {
+    font-size: calc(var(--step-1) * 1.06);
+  }
+
+  /* Receipt: the only place the highlighter yellow appears. */
+  /* inline-block keeps a long citation together as one chip instead of
+     breaking it across lines mid-sentence. */
+  .receipt {
+    display: inline-block;
+    max-width: 100%;
+    padding: 0.15em 0.45em;
+    border-radius: var(--radius-chip);
+    background: var(--receipt-bg);
+    color: var(--ink);
+    font-family: var(--font-user);
+    font-size: var(--step--1);
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0;
+    vertical-align: 0.05em;
+  }
+  a.receipt {
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+}

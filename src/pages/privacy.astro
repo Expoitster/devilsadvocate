@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import { CONTACT_EMAIL } from '../config';
+---
+
+<Base title="Privacy" description="What Devils Advocate does with your waitlist details.">
+  <article class="container-page py-[calc(var(--section-gap)/2)]">
+    <h1 class="max-w-[16ch] !text-step-4">Privacy</h1>
+    <div class="mt-8 max-w-measure space-y-4">
+      <p>We collect your email and your waitlist answers only to invite you to the beta.</p>
+      <p>They are stored with our form provider.</p>
+      <p>
+        Email <a class="link-quiet" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> to have them deleted.
+      </p>
+      <p><a class="link-quiet inline-flex min-h-11 items-center" href="/">Back to the home page</a></p>
+    </div>
+  </article>
+</Base>

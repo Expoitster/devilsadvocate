@@ -1,0 +1,26 @@
+---
+/**
+ * The product's voice: Fraunces, indented, raspberry speech mark.
+ * Pass `speaker={false}` where the context already says who is talking.
+ */
+interface Props {
+  as?: 'div' | 'li';
+  bodyAs?: 'p' | 'div';
+  size?: 'sm' | 'md' | 'lg';
+  speaker?: string | false;
+  class?: string;
+}
+
+const {
+  as: Tag = 'div',
+  bodyAs: Body = 'p',
+  size = 'md',
+  speaker = 'Devils Advocate',
+  class: className,
+} = Astro.props;
+---
+
+<Tag class:list={['line', 'line--product', `line--${size}`, className]}>
+  <span class="line__mark" aria-hidden="true">“</span>
+  <Body class="line__body">{speaker && <span class="sr-only-text">{speaker}: </span>}<slot /></Body>
+</Tag>
