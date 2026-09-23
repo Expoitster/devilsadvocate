@@ -8,8 +8,6 @@ import WhatYouGet from '../components/WhatYouGet.astro';
 import Refuse from '../components/Refuse.astro';
 import Faq from '../components/Faq.astro';
 import HowItWorks from '../components/HowItWorks.astro';
-import SectionPlaceholder from '../components/SectionPlaceholder.astro';
-import { SECTIONS } from '../config';
 ---
 
 <Base>
@@ -21,9 +19,4 @@ import { SECTIONS } from '../config';
   <WhatYouGet />
   <Refuse />
   <Faq />
-  <SectionPlaceholder
-    id={SECTIONS.waitlist}
-    heading="Got an idea you’re completely sure about? Perfect."
-    note="Waitlist form, posting to the external form service."
-  />
 </Base>

@@ -59,7 +59,6 @@ import { SECTIONS } from '../config';
             <button type="button" class="journey__back" data-back>Back</button>
             <p class="journey__count" data-count aria-hidden="true">Step 1 of 7</p>
             <button type="button" class="btn-primary journey__next" data-next>Next</button>
-            <a href="#waitlist" class="btn-primary journey__join" data-join hidden>Join the waitlist</a>
           </div>
         </div>
       </div>
@@ -248,7 +247,10 @@ import { SECTIONS } from '../config';
     font-weight: 600;
     cursor: pointer;
   }
-  .journey__back[aria-disabled='true'] {
+  /* At either end, the control that can't go further steps aside but
+     keeps its space, so the row doesn't jump. */
+  .journey__back[aria-disabled='true'],
+  .journey__next[aria-disabled='true'] {
     visibility: hidden;
   }
   .journey__count {
@@ -268,8 +270,7 @@ import { SECTIONS } from '../config';
       display: none;
     }
   }
-  .journey__next,
-  .journey__join {
+  .journey__next {
     cursor: pointer;
   }
 

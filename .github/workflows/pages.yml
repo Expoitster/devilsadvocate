@@ -40,10 +40,6 @@ jobs:
         env:
           SITE_URL: ${{ steps.pages.outputs.origin }}
           BASE_PATH: ${{ steps.pages.outputs.base_path }}
-          # Set these under Settings > Secrets and variables > Actions >
-          # Variables. Until then the page shows {{...}} placeholders.
-          PUBLIC_CONTACT_EMAIL: ${{ vars.PUBLIC_CONTACT_EMAIL }}
-          PUBLIC_FORM_ENDPOINT: ${{ vars.PUBLIC_FORM_ENDPOINT }}
 
       - uses: actions/upload-pages-artifact@v5
         with:

@@ -1,8 +1,3 @@
-// Values that must be filled in before launch. They render verbatim until
-// then, so an unfilled placeholder is visible rather than silently wrong.
-export const FORM_ENDPOINT = import.meta.env.PUBLIC_FORM_ENDPOINT || '{{FORM_ENDPOINT}}';
-export const CONTACT_EMAIL = import.meta.env.PUBLIC_CONTACT_EMAIL || '{{CONTACT_EMAIL}}';
-
 export const SITE = {
   name: 'Devils Advocate',
   title: 'Devils Advocate: challenge your idea before reality does',
@@ -27,10 +22,9 @@ export const SECTIONS = {
   whatYouGet: 'what-you-get',
   refuse: 'what-we-wont-do',
   faq: 'faq',
-  waitlist: 'waitlist',
 } as const;
 
-// A link to a home-page section that also works from /privacy/.
+// A link to a home-page section, prefixed with the base path.
 export const sectionHref = (id: string) => path(`/#${id}`);
 
 export const NAV_LINKS = [

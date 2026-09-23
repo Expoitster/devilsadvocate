@@ -30,9 +30,8 @@ export function initJourney(): void {
   const navHome = q<HTMLElement>('[data-nav-home]');
   const back = q<HTMLButtonElement>('[data-back]');
   const next = q<HTMLButtonElement>('[data-next]');
-  const join = q<HTMLAnchorElement>('[data-join]');
   const count = q<HTMLElement>('[data-count]');
-  if (!stage || !modes || !live || !nav || !navHome || !back || !next || !join || !count) return;
+  if (!stage || !modes || !live || !nav || !navHome || !back || !next || !count) return;
 
   const total = steps.length;
   const desktop = matchMedia('(min-width: 64rem)');
@@ -97,9 +96,7 @@ export function initJourney(): void {
     });
 
     back!.setAttribute('aria-disabled', String(current === 0));
-    const last = current === total - 1;
-    next!.hidden = last;
-    join!.hidden = !last;
+    next!.setAttribute('aria-disabled', String(current === total - 1));
     count!.textContent = `Step ${current + 1} of ${total}`;
     placeNav();
   }
@@ -159,13 +156,14 @@ export function initJourney(): void {
     if (current === 0) return;
     go(current - 1, { scroll: true });
     announce(stepLabel(current));
+    if (current === 0) next.focus({ preventScroll: true });
   });
   next.addEventListener('click', () => {
+    if (current === total - 1) return;
     go(current + 1, { scroll: true });
     announce(stepLabel(current));
-    // Next hides itself on the last step; keep focus on the control
-    // that replaced it.
-    if (current === total - 1) join.focus({ preventScroll: true });
+    // Next steps aside on the last step; keep focus on a visible control.
+    if (current === total - 1) back.focus({ preventScroll: true });
   });
 
   modes.addEventListener('change', (event) => {

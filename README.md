@@ -1,6 +1,6 @@
 # Devils Advocate: coming-soon site
 
-A static marketing site built with Astro and Tailwind CSS. There is no backend: the waitlist form posts to an external form service.
+A static marketing site built with Astro and Tailwind CSS. No backend, no forms: it collects nothing.
 
 The brief is in `CLAUDE.md`, and all page copy is in `docs/copy.md`.
 
@@ -15,9 +15,7 @@ npm run preview    # serve dist/ locally
 
 While `npm run dev` is running, `/_components` shows every voice component. That page is dev-only and is left out of the build.
 
-## Before launch
-
-Copy `.env.example` to `.env` and set `SITE_URL`, `PUBLIC_FORM_ENDPOINT`, and `PUBLIC_CONTACT_EMAIL`. Until you do, the page shows the literal `{{…}}` placeholders.
+## Deploying
 
 Live on GitHub Pages at https://expoitster.github.io/devilsadvocate/ (published by `.github/workflows/pages.yml`). For Vercel, Netlify, or a custom domain, see `docs/deploy.md`.
 

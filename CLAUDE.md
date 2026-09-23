@@ -1,9 +1,11 @@
-You are building a STATIC marketing website for a product that is coming soon. The site's only job: make visitors understand the idea and the step-by-step journey they will get, then join a waitlist.
+You are building a STATIC marketing website for a product that is coming soon. The site's only job: make visitors understand the idea and the step-by-step journey they will get.
+
+Scope change (September 23, 2026): the owner removed the waitlist entirely: the form, every "Join the waitlist" button, and the privacy page that described waitlist data. The site collects nothing. Don't add any of it back unless asked.
 
 Hard scope rules:
 - Static site only: no backend, no database, no API routes, no login, no pricing.
 - Do NOT build any product functionality. No working chatbot, no working microphone, no transcription. Any product screens shown on the page are illustrative mockups made of HTML and CSS.
-- The only interactive pieces allowed: the hero animation, the "How it works" step-through, FAQ toggles, and the waitlist form (which posts to an external form service).
+- The only interactive pieces allowed: the hero animation, the "How it works" step-through, the mobile menu, and FAQ toggles.
 
 The site copy lives in `docs/copy.md` (the COPY section below, kept in sync).
 
@@ -23,7 +25,7 @@ Two modes:
 
 Audience: MBA students, first-time founders, and young professionals in India. Smart, busy, allergic to fluff, and on their phones. Design mobile-first.
 
-Launch status: private beta opens December 1, 2026. Waitlist members get in first.
+Launch status: private beta opens December 1, 2026.
 
 # VOICE
 Humorous, straightforward, warm. Think: the funny, sharp friend who asks "wait, why?" when everyone else says "go for it." Short sentences and plain words. The humor comes from honesty, not insults. Never mean to the reader, never smug.
@@ -31,7 +33,7 @@ Humorous, straightforward, warm. Think: the funny, sharp friend who asks "wait, 
 Rules:
 - Never invent social proof: no fake testimonials, no fake user counts, no "trusted by" logos.
 - No pricing and no "free" claims.
-- Sentence case everywhere. Buttons say exactly what happens ("Join the waitlist").
+- Sentence case everywhere. Buttons say exactly what happens ("See how it works").
 
 # DESIGN LANGUAGE: "Two voices on one page"
 Concept: the page itself is a conversation between the reader and the devil's advocate. Every visual choice encodes WHO is speaking.
@@ -77,21 +79,19 @@ Quality floor: responsive from 360px up, visible keyboard focus, WCAG AA contras
 
 # TECH
 - Astro (static output) with Tailwind CSS, mapping the tokens to Tailwind theme colors.
-- Small vanilla TypeScript for the hero animation, step-through, FAQ and form. No React needed.
-- Waitlist form: plain HTML form posting to {{FORM_ENDPOINT}} (Formspree-style endpoint). No backend of our own.
-- Deploy target: any static host (Vercel or Netlify).
+- Small vanilla TypeScript for the hero animation, step-through, and mobile menu. No React needed.
+- Deploy target: GitHub Pages (.github/workflows/pages.yml); any static host works.
 
 # COPY (use it; you may tighten wording, but keep the tone and the facts)
 
 ## Nav
-Logo: Devils Advocate (Fraunces). Links: How it works, What you get, FAQ. Button: Join the waitlist.
+Logo: Devils Advocate (Fraunces). Links: How it works, What you get, FAQ.
 
 ## Hero
 Headline: Your idea sounds great. That's what worries us.
 Subhead: Talk through your startup idea or big decision. Devils Advocate asks the awkward questions, brings receipts from failed startups and 2,000 years of philosophy, then hands the decision back to you. You're the boss. We just read the fine print.
-Primary button: Join the waitlist
-Secondary link: See how it works
-Small print: Private beta opens December 1, 2026. No spam. We save the arguing for the product.
+Primary button: See how it works
+Small print: Private beta opens December 1, 2026.
 
 Hero debate animation script (an illustration; plays once):
 1. USER (voice-note bubble with an animated waveform, which then turns into text): "I'm building food delivery for college hostels. Swiggy made it, so will I."
@@ -166,29 +166,13 @@ Heading: Things we refuse to do
 - What if I'm actually right? / Then you walk away more sure, with the counterarguments already handled. That's a win.
 - Do I have to talk? I'm shy. / Type if you prefer. The mic is for people who think out loud.
 - Who is it for? / MBA students, first-time founders, and anyone about to make a call they'd hate to get wrong.
-- Can I use it right now? / Not yet. Private beta opens December 1, 2026, and the waitlist gets in first.
-- What do you do with my waitlist details? / We use them only to invite you to the beta. Email {{CONTACT_EMAIL}} and we'll delete them.
-
-## Waitlist (final section)
-Heading: Got an idea you're completely sure about? Perfect.
-Subhead: Join the waitlist. We'll argue with you on December 1.
-Fields:
-- Email (required)
-- First name (optional)
-- I am a (single select): MBA student / First-time founder / Working professional / Just curious
-- What would you bring first? (multi-select chips): A startup idea / A life decision / A work proposal / A belief I want to test
-- The idea or decision you'd bring (optional, one line, placeholder: "e.g. I'm skipping placements to start a pet-food brand")
-Button: Join the waitlist
-Success: You're in. We'll email you before the beta opens on December 1. Until then, practice: doubt one thing you believed this morning.
-Invalid email: That email looks off. Check for typos and try again.
-Send failed: Something broke on our side, and it's not your idea's fault. Try again in a minute.
+- Can I use it right now? / Not yet. Private beta opens December 1, 2026.
 
 ## Footer
 Built by Avinash G, an MBA student who heard "great idea" one too many times.
-Links: Privacy (a short static page: we collect your email and waitlist answers only to invite you to the beta; they are stored with our form provider; email {{CONTACT_EMAIL}} to have them deleted).
 
 # REPO NOTES (added during setup)
 - Run `npm run dev` (http://localhost:4321), `npm run build`, and `npm run check`. `/_components` is a dev-only preview of the voice components.
 - Tokens, type scale, and voice styles live in `src/styles/global.css`. Tailwind's default palette is cleared, so only the token colors exist as utilities (`bg-paper`, `text-devil`, `text-step-1`, `text-display`, ...).
 - Use `UserLine`, `ProductLine`, `Receipt`, and `PhoneFrame` from `src/components/` for anything conversational. Don't restyle speech marks per section.
-- Section ids and nav links live in `src/config.ts`. `{{FORM_ENDPOINT}}` and `{{CONTACT_EMAIL}}` come from `PUBLIC_FORM_ENDPOINT` and `PUBLIC_CONTACT_EMAIL`.
+- Section ids and nav links live in `src/config.ts`. Use `path()` / `sectionHref()` from there for links: the site is served from a sub-path on GitHub Pages.
