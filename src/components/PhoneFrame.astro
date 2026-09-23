@@ -16,6 +16,9 @@ interface Props {
 }
 
 const { label, title = 'Devils Advocate', subtitle, caption, class: className } = Astro.props;
+// A conditional `slot="bottom"` still registers the slot, so check that it
+// actually rendered something.
+const bottom = Astro.slots.has('bottom') ? (await Astro.slots.render('bottom')).trim() : '';
 ---
 
 <figure class:list={['phone', className]} aria-label={label}>
@@ -30,9 +33,9 @@ const { label, title = 'Devils Advocate', subtitle, caption, class: className } 
         <slot />
       </div>
       {
-        Astro.slots.has('bottom') && (
+        bottom && (
           <div class="phone__bottom">
-            <slot name="bottom" />
+            <Fragment set:html={bottom} />
           </div>
         )
       }

@@ -7,6 +7,7 @@ import Bring from '../components/Bring.astro';
 import WhatYouGet from '../components/WhatYouGet.astro';
 import Refuse from '../components/Refuse.astro';
 import Faq from '../components/Faq.astro';
+import HowItWorks from '../components/HowItWorks.astro';
 import SectionPlaceholder from '../components/SectionPlaceholder.astro';
 import { SECTIONS } from '../config';
 ---
@@ -16,11 +17,7 @@ import { SECTIONS } from '../config';
   <Why />
   <Modes />
   <Bring />
-  <SectionPlaceholder
-    id={SECTIONS.howItWorks}
-    heading="Here's exactly what will happen when you show up"
-    note="How it works: mode toggle, 7-step click-through, phone mockup."
-  />
+  <HowItWorks />
   <WhatYouGet />
   <Refuse />
   <Faq />
