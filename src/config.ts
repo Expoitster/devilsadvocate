@@ -5,8 +5,11 @@ export const CONTACT_EMAIL = import.meta.env.PUBLIC_CONTACT_EMAIL || '{{CONTACT_
 
 export const SITE = {
   name: 'Devils Advocate',
+  title: 'Devils Advocate: challenge your idea before reality does',
   description:
-    'A coming-soon chatbot you talk to that challenges your startup idea or big decision with real evidence, then hands the decision back to you. Private beta opens December 1, 2026.',
+    'A coming-soon chatbot that challenges your startup idea or big decision with receipts from failed startups and 2,000 years of philosophy, then hands the decision back to you. Private beta opens December 1, 2026.',
+  ogImageAlt:
+    'Devils Advocate. “I’m skipping placements to build my startup full time.” “Your idea sounds great. That’s what worries us.” Private beta opens December 1, 2026.',
 };
 
 // The in-page sections, in page order. Nav links point at these ids.

@@ -17,7 +17,11 @@ While `npm run dev` is running, `/_components` shows every voice component. That
 
 ## Before launch
 
-Copy `.env.example` to `.env` and set `PUBLIC_FORM_ENDPOINT` and `PUBLIC_CONTACT_EMAIL`. Until you do, the page shows the literal `{{…}}` placeholders.
+Copy `.env.example` to `.env` and set `SITE_URL`, `PUBLIC_FORM_ENDPOINT`, and `PUBLIC_CONTACT_EMAIL`. Until you do, the page shows the literal `{{…}}` placeholders.
+
+Deploying to Vercel or Netlify, with a custom domain: see `docs/deploy.md`.
+
+The share image (`public/og.png`), touch icon, and `favicon.ico` are pre-rendered by `scripts/render-images.cjs`. Re-run it if the headline or icon changes.
 
 ## Where things live
 
@@ -30,4 +34,6 @@ Copy `.env.example` to `.env` and set `PUBLIC_FORM_ENDPOINT` and `PUBLIC_CONTACT
 | `src/components/Receipt.astro` | inline citation chip, the only thing that is yellow |
 | `src/components/PhoneFrame.astro` | static phone screen for mockups |
 | `src/pages/index.astro` | the page's sections, in order |
-| `src/config.ts` | section ids, nav links, placeholders |
+| `src/config.ts` | section ids, nav links, title and description, placeholders |
+| `src/data/journey.ts` | the How it works steps and both modes' examples |
+| `astro.config.mjs` | site URL, and the build step that writes robots.txt and sitemap.xml |
