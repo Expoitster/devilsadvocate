@@ -1,0 +1,390 @@
+---
+import UserLine from './UserLine.astro';
+import ProductLine from './ProductLine.astro';
+import Receipt from './Receipt.astro';
+import { SECTIONS } from '../config';
+
+// Bar heights for the voice-note waveform, as a fraction of its height.
+const WAVE = [0.35, 0.6, 0.85, 0.5, 0.95, 0.7, 0.4, 0.8, 1, 0.55, 0.3, 0.65, 0.9, 0.6, 0.45, 0.75, 0.5, 0.85, 0.35, 0.6, 0.4, 0.25];
+---
+
+<section id={SECTIONS.hero} aria-labelledby="hero-heading" class="hero container-page">
+  <div class="hero__grid">
+    <div class="hero__copy">
+      <h1 id="hero-heading" class="hero__headline">
+        <span class="hero__sentence">Your idea sounds great.</span>
+        <span class="hero__sentence">That’s what worries us.</span>
+      </h1>
+
+      <p class="hero__subhead">
+        Talk through your startup idea or big decision. Devils Advocate asks the awkward questions, brings receipts from
+        failed startups and 2,000 years of philosophy, then hands the decision back to you. You’re the boss. We just read
+        the fine print.
+      </p>
+
+      <div class="hero__actions">
+        <a href={`#${SECTIONS.waitlist}`} class="btn-primary">Join the waitlist</a>
+        <a href={`#${SECTIONS.howItWorks}`} class="link-quiet inline-flex min-h-12 items-center">See how it works</a>
+      </div>
+
+      <p class="hero__smallprint">
+        Private beta opens <time datetime="2026-12-01">December 1, 2026</time>. No spam. We save the arguing for the
+        product.
+      </p>
+    </div>
+
+    <!--
+      The debate is a scripted illustration. Its markup is the finished
+      conversation, which is what shows with JavaScript off or with reduced
+      motion. debate.ts hides the turns and plays them in once.
+    -->
+    <figure class="debate" data-debate aria-labelledby="debate-caption" tabindex="-1">
+      <div class="debate__turns">
+        <UserLine size="lg" bodyAs="div" class="turn turn--user" data-turn>
+          <div class="voice-note" aria-hidden="true">
+            <svg class="voice-note__play" viewBox="0 0 12 14" width="12" height="14"><path d="M1 1.2v11.6a.6.6 0 0 0 .9.5l9.6-5.8a.6.6 0 0 0 0-1L1.9.7a.6.6 0 0 0-.9.5z" fill="currentColor"></path></svg>
+            <span class="voice-note__wave">
+              {WAVE.map((h, i) => <span style={`--h:${h};--i:${i}`} />)}
+            </span>
+            <span class="voice-note__time">0:06</span>
+          </div>
+          <p class="turn__text">I’m building food delivery for college hostels. Swiggy made it, so will I.</p>
+          <p class="turn__meta">Transcribed from a voice note</p>
+        </UserLine>
+
+        <ProductLine size="lg" bodyAs="div" class="turn turn--product" data-turn>
+          <span class="typing" aria-hidden="true"><span></span><span></span><span></span></span>
+          <p class="turn__text">Love the confidence. Quick question first: who’s paying? The students, or their parents’ UPI?</p>
+        </ProductLine>
+
+        <ProductLine size="lg" bodyAs="div" class="turn turn--product" data-turn>
+          <span class="typing" aria-hidden="true"><span></span><span></span><span></span></span>
+          <p class="turn__text">
+            Also, Swiggy is one survivor. We found three hostel-delivery startups that didn’t make it. Want to meet them?
+          </p>
+          <p class="turn__receipt"><Receipt>3 similar startups, why they shut down, sources linked</Receipt></p>
+        </ProductLine>
+
+        <ProductLine size="lg" bodyAs="div" class="turn turn--product" data-turn>
+          <span class="typing" aria-hidden="true"><span></span><span></span><span></span></span>
+          <p class="turn__text">Your call. Always.</p>
+        </ProductLine>
+      </div>
+
+      <div class="debate__footer">
+        <figcaption id="debate-caption" class="debate__caption">An illustration of a sample conversation.</figcaption>
+        <button type="button" class="debate__replay link-quiet" data-replay hidden>Replay</button>
+      </div>
+    </figure>
+    <script is:inline>
+      // Arm the animation before first paint so the finished conversation
+      // never flashes. If debate.ts hasn't taken over within 4s (blocked or
+      // failed), disarm so the conversation is never left invisible.
+      (function () {
+        var el = document.querySelector('[data-debate]');
+        if (!el || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        el.setAttribute('data-state', 'armed');
+        setTimeout(function () {
+          if (!el.hasAttribute('data-controlled')) el.removeAttribute('data-state');
+        }, 4000);
+      })();
+    </script>
+  </div>
+</section>
+
+<script>
+  import { initDebate } from '../scripts/debate';
+  initDebate();
+</script>
+
+<style is:global>
+  /* ---------------------------------------------------------------- */
+  /* Layout                                                            */
+  /* ---------------------------------------------------------------- */
+
+  .hero {
+    padding-top: clamp(1.5rem, 0.6rem + 4vw, 5.5rem);
+    padding-bottom: calc(var(--section-gap) * 0.75);
+  }
+
+  .hero__grid {
+    display: grid;
+    gap: 3.5rem;
+  }
+
+  @media (min-width: 64rem) {
+    .hero__grid {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+      column-gap: clamp(3rem, 5vw, 5rem);
+      align-items: start;
+    }
+  }
+
+  /* The headline carries the page: each sentence gets its own line(s),
+     so the setup and the turn read as two beats. */
+  .hero__headline {
+    font-size: var(--step-display);
+    font-weight: 580;
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    max-width: 13ch;
+  }
+  .hero__sentence {
+    display: block;
+  }
+
+  .hero__subhead {
+    margin-top: 1.25rem;
+    max-width: 36ch;
+    font-size: var(--step-1);
+    line-height: 1.42;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    margin-top: 1.75rem;
+  }
+
+  .hero__smallprint {
+    margin-top: 1rem;
+    max-width: 44ch;
+    font-size: var(--step--1);
+    color: var(--ink-muted);
+  }
+
+  @media (min-width: 64rem) {
+    .hero__subhead {
+      margin-top: 2rem;
+    }
+    .hero__actions {
+      margin-top: 2.25rem;
+    }
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* The debate                                                        */
+  /* ---------------------------------------------------------------- */
+
+  .debate {
+    margin: 0;
+    padding-top: 2rem;
+    border-top: 1px solid var(--rule);
+  }
+  .debate:focus {
+    outline: none;
+  }
+
+  /* On desktop the debate reads like a transcript in the margin. */
+  @media (min-width: 64rem) {
+    .debate {
+      padding-top: 0.5rem;
+      padding-left: clamp(2rem, 3vw, 3rem);
+      border-top: 0;
+      border-left: 1px solid var(--rule);
+    }
+  }
+
+  .debate__turns {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  /* Big enough to be the page's one bold moment, small enough that a
+     reply keeps a readable line length in the desktop column. */
+  .debate .line--user.line--lg {
+    font-size: 1.25rem;
+  }
+  .debate .line--product.line--lg {
+    --line-indent: 1.75rem;
+    font-size: 1.3125rem;
+  }
+  @media (min-width: 64rem) {
+    .debate .line--user.line--lg {
+      font-size: 1.1875rem;
+    }
+    .debate .line--product.line--lg {
+      --line-indent: 2.25rem;
+    }
+  }
+
+  .debate .line__body {
+    position: relative;
+  }
+
+  .turn__meta {
+    margin-top: 0.375rem;
+    font-size: var(--step--1);
+    font-weight: 400;
+    color: var(--ink-muted);
+  }
+
+  .turn__receipt {
+    margin-top: 0.625rem;
+  }
+
+  .debate__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0 1rem;
+    min-height: 2.75rem;
+    margin-top: 1.75rem;
+  }
+
+  .debate__caption {
+    font-size: var(--step--1);
+    color: var(--ink-muted);
+  }
+
+  .debate__replay {
+    min-height: 2.75rem;
+    padding: 0 0.25rem;
+    font-size: var(--step--1);
+    cursor: pointer;
+  }
+
+  /* The voice note and the typing dots exist only while the animation
+     runs. In the finished (default) state they are not shown at all. */
+  .voice-note,
+  .typing {
+    display: none;
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Animation states. Only reachable once debate.ts has armed the     */
+  /* debate, which it never does under prefers-reduced-motion.         */
+  /* ---------------------------------------------------------------- */
+
+  .debate[data-state] .turn {
+    transition: opacity 280ms ease-out, transform 280ms ease-out;
+  }
+  .debate[data-state] .turn:not([data-step]),
+  .debate[data-state] .turn[data-step='hidden'] {
+    opacity: 0;
+    transform: translateY(0.375rem);
+  }
+
+  /* Hidden parts still take up their space, so nothing below jumps. */
+  .debate[data-state] .turn__text,
+  .debate[data-state] .turn__meta,
+  .debate[data-state] .turn__receipt {
+    transition: opacity 320ms ease-out;
+  }
+  .debate[data-state] .turn:not([data-step='shown']) :is(.turn__text, .turn__meta, .turn__receipt) {
+    opacity: 0;
+  }
+
+  /* 1. The voice note, over the space its transcript will fill. */
+  .voice-note {
+    position: absolute;
+    top: 0;
+    left: 0;
+    align-items: center;
+    gap: 0.625rem;
+    height: 2.75rem;
+    padding: 0 1rem 0 0.875rem;
+    border-radius: 1.375rem;
+    background: color-mix(in srgb, var(--you) 13%, var(--surface));
+    color: var(--you);
+    transition: opacity 240ms ease-out, transform 240ms ease-out;
+    transform-origin: left center;
+  }
+  .debate[data-state] .turn--user .voice-note {
+    display: flex;
+    opacity: 0;
+  }
+  .debate[data-state] .turn--user[data-step='voice'] .voice-note {
+    opacity: 1;
+  }
+  .debate[data-state] .turn--user[data-step='shown'] .voice-note {
+    opacity: 0;
+    transform: scaleX(0.6);
+  }
+
+  .voice-note__wave {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    height: 1.375rem;
+  }
+  .voice-note__wave span {
+    width: 3px;
+    height: calc(var(--h) * 100%);
+    border-radius: 2px;
+    background: currentColor;
+    transform-origin: center;
+  }
+  .turn--user[data-step='voice'] .voice-note__wave span {
+    animation: wave 620ms ease-in-out infinite alternate;
+    animation-delay: calc(var(--i) * -71ms);
+  }
+  @keyframes wave {
+    from {
+      transform: scaleY(0.35);
+    }
+    to {
+      transform: scaleY(1);
+    }
+  }
+
+  .voice-note__time {
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+
+  /* 2. Typing: the speech mark arrives first, then the words. */
+  .typing {
+    position: absolute;
+    top: 0.55em;
+    left: 0;
+    gap: 0.3rem;
+  }
+  .debate[data-state] .turn[data-step='typing'] .typing {
+    display: flex;
+  }
+  .typing span {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background: var(--devil);
+    animation: typing 900ms ease-in-out infinite;
+  }
+  .typing span:nth-child(2) {
+    animation-delay: 150ms;
+  }
+  .typing span:nth-child(3) {
+    animation-delay: 300ms;
+  }
+  @keyframes typing {
+    0%,
+    60%,
+    100% {
+      opacity: 0.25;
+      transform: translateY(0);
+    }
+    30% {
+      opacity: 1;
+      transform: translateY(-0.2rem);
+    }
+  }
+
+  /* 3. The receipt is highlighted in, like a marker pass, just after
+        its line lands. */
+  .debate[data-state] .receipt {
+    background-color: transparent;
+    background-image: linear-gradient(var(--receipt-bg), var(--receipt-bg));
+    background-repeat: no-repeat;
+    background-size: 0% 100%;
+    transition: background-size 520ms cubic-bezier(0.3, 0.7, 0.3, 1) 380ms;
+  }
+  .debate[data-state] .turn[data-step='shown'] .receipt {
+    background-size: 100% 100%;
+  }
+</style>

@@ -1,9 +1,11 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
+
 /**
  * The product's voice: Fraunces, indented, raspberry speech mark.
  * Pass `speaker={false}` where the context already says who is talking.
  */
-interface Props {
+interface Props extends Omit<HTMLAttributes<'div'>, 'class'> {
   as?: 'div' | 'li';
   bodyAs?: 'p' | 'div';
   size?: 'sm' | 'md' | 'lg';
@@ -17,10 +19,11 @@ const {
   size = 'md',
   speaker = 'Devils Advocate',
   class: className,
+  ...rest
 } = Astro.props;
 ---
 
-<Tag class:list={['line', 'line--product', `line--${size}`, className]}>
+<Tag {...rest} class:list={['line', 'line--product', `line--${size}`, className]}>
   <span class="line__mark" aria-hidden="true">“</span>
   <Body class="line__body">{speaker && <span class="sr-only-text">{speaker}: </span>}<slot /></Body>
 </Tag>

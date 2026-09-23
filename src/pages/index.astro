@@ -1,16 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
 import SectionPlaceholder from '../components/SectionPlaceholder.astro';
 import { SECTIONS } from '../config';
 ---
 
 <Base>
-  <SectionPlaceholder
-    id={SECTIONS.hero}
-    level={1}
-    heading="Your idea sounds great. That's what worries us."
-    note="Hero: subhead, waitlist button, and the animated debate."
-  />
+  <Hero />
   <SectionPlaceholder
     id={SECTIONS.why}
     heading="The people who love you are terrible at this."
