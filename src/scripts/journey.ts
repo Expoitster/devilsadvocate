@@ -30,6 +30,7 @@ export function initJourney(): void {
   const navHome = q<HTMLElement>('[data-nav-home]');
   const back = q<HTMLButtonElement>('[data-back]');
   const next = q<HTMLButtonElement>('[data-next]');
+  const join = q<HTMLAnchorElement>('[data-join]');
   const count = q<HTMLElement>('[data-count]');
   if (!stage || !modes || !live || !nav || !navHome || !back || !next || !count) return;
 
@@ -96,7 +97,14 @@ export function initJourney(): void {
     });
 
     back!.setAttribute('aria-disabled', String(current === 0));
-    next!.setAttribute('aria-disabled', String(current === total - 1));
+    const last = current === total - 1;
+    if (join) {
+      // The last step hands off to the waitlist instead of Next.
+      next!.hidden = last;
+      join.hidden = !last;
+    } else {
+      next!.setAttribute('aria-disabled', String(last));
+    }
     count!.textContent = `Step ${current + 1} of ${total}`;
     placeNav();
   }
@@ -163,7 +171,7 @@ export function initJourney(): void {
     go(current + 1, { scroll: true });
     announce(stepLabel(current));
     // Next steps aside on the last step; keep focus on a visible control.
-    if (current === total - 1) back.focus({ preventScroll: true });
+    if (current === total - 1) (join ?? back).focus({ preventScroll: true });
   });
 
   modes.addEventListener('change', (event) => {

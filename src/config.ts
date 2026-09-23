@@ -1,3 +1,18 @@
+// Waitlist signups go into a Supabase table that the public can add rows to
+// but never read (see supabase/migrations/). These values are public by
+// design: they end up in the page's JavaScript, and the database's
+// row-level security is what keeps the list private.
+export const WAITLIST = {
+  supabaseUrl: (import.meta.env.PUBLIC_SUPABASE_URL ?? '').trim().replace(/\/$/, ''),
+  supabaseKey: (import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '').trim(),
+  contactEmail: (import.meta.env.PUBLIC_CONTACT_EMAIL ?? '').trim(),
+};
+
+// The waitlist (form, buttons, privacy page) only appears once it can store
+// a signup and tell people how to get it deleted. Until then the site
+// builds without it, rather than showing a form that can't work.
+export const WAITLIST_ON = Boolean(WAITLIST.supabaseUrl && WAITLIST.supabaseKey && WAITLIST.contactEmail);
+
 export const SITE = {
   name: 'Devils Advocate',
   title: 'Devils Advocate: challenge your idea before reality does',
@@ -22,9 +37,10 @@ export const SECTIONS = {
   whatYouGet: 'what-you-get',
   refuse: 'what-we-wont-do',
   faq: 'faq',
+  waitlist: 'waitlist',
 } as const;
 
-// A link to a home-page section, prefixed with the base path.
+// A link to a home-page section that also works from /privacy/.
 export const sectionHref = (id: string) => path(`/#${id}`);
 
 export const NAV_LINKS = [

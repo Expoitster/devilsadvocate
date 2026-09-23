@@ -2,7 +2,7 @@
 import UserLine from './UserLine.astro';
 import ProductLine from './ProductLine.astro';
 import Receipt from './Receipt.astro';
-import { SECTIONS } from '../config';
+import { SECTIONS, WAITLIST_ON } from '../config';
 
 // Bar heights for the voice-note waveform, as a fraction of its height.
 const WAVE = [0.35, 0.6, 0.85, 0.5, 0.95, 0.7, 0.4, 0.8, 1, 0.55, 0.3, 0.65, 0.9, 0.6, 0.45, 0.75, 0.5, 0.85, 0.35, 0.6, 0.4, 0.25];
@@ -23,11 +23,28 @@ const WAVE = [0.35, 0.6, 0.85, 0.5, 0.95, 0.7, 0.4, 0.8, 1, 0.55, 0.3, 0.65, 0.9
       </p>
 
       <div class="hero__actions">
-        <a href={`#${SECTIONS.howItWorks}`} class="btn-primary">See how it works</a>
+        {
+          WAITLIST_ON ? (
+            <>
+              <a href={`#${SECTIONS.waitlist}`} class="btn-primary">
+                Join the waitlist
+              </a>
+              <a href={`#${SECTIONS.howItWorks}`} class="link-quiet inline-flex min-h-12 items-center">
+                See how it works
+              </a>
+            </>
+          ) : (
+            <a href={`#${SECTIONS.howItWorks}`} class="btn-primary">
+              See how it works
+            </a>
+          )
+        }
       </div>
 
       <p class="hero__smallprint">
-        Private beta opens <time datetime="2026-12-01">December 1, 2026</time>.
+        Private beta opens <time datetime="2026-12-01">December 1, 2026</time>.{
+          WAITLIST_ON && ' No spam. We save the arguing for the product.'
+        }
       </p>
     </div>
 

@@ -1,5 +1,5 @@
 ---
-import { NAV_LINKS, SECTIONS, SITE, sectionHref } from '../config';
+import { NAV_LINKS, SECTIONS, SITE, WAITLIST_ON, sectionHref } from '../config';
 ---
 
 <header class="site-header sticky top-0 z-40 border-b border-rule bg-paper">
@@ -19,6 +19,14 @@ import { NAV_LINKS, SECTIONS, SITE, sectionHref } from '../config';
         ))
       }
     </ul>
+
+    {
+      WAITLIST_ON && (
+        <a href={sectionHref(SECTIONS.waitlist)} class="btn-primary header-cta !min-h-11 !px-3.5 !text-[0.9375rem] md:ml-2">
+          Join the waitlist
+        </a>
+      )
+    }
 
     <button
       type="button"
@@ -46,6 +54,15 @@ import { NAV_LINKS, SECTIONS, SITE, sectionHref } from '../config';
           </li>
         ))
       }
+      {
+        WAITLIST_ON && (
+          <li class="py-4">
+            <a href={sectionHref(SECTIONS.waitlist)} class="btn-primary w-full">
+              Join the waitlist
+            </a>
+          </li>
+        )
+      }
     </ul>
   </div>
 </header>
@@ -72,6 +89,17 @@ import { NAV_LINKS, SECTIONS, SITE, sectionHref } from '../config';
   @media (prefers-reduced-motion: reduce) {
     .bar {
       transition: none;
+    }
+  }
+
+  /* The header button needs room next to the logo and the menu button.
+     Below 370px it lives inside the menu instead. */
+  .header-cta {
+    display: none;
+  }
+  @media (min-width: 23.125rem) {
+    .header-cta {
+      display: inline-flex;
     }
   }
 

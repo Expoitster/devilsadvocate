@@ -18,6 +18,40 @@ to `claude/lucid-planck-8061mj` or `main`.
 2. **Run it:** go to **Actions > Deploy to GitHub Pages**. Re-run the
    latest run, or use **Run workflow**. It takes about a minute. The URL
    appears on the run page and under **Settings > Pages**.
+3. **Waitlist:** see "Turn on the waitlist" below.
+
+## Turn on the waitlist (Supabase)
+
+Signups are saved in a Supabase table. Visitors' browsers can add a row
+but can't read, change, or delete anything; you see the list in the
+Supabase dashboard.
+
+1. **Create the table.** In Supabase, open your project, then **SQL Editor >
+   New query**. Paste the contents of
+   `supabase/migrations/20260923120000_waitlist.sql` and click **Run**. It's
+   safe to run twice.
+2. **Copy two values** from **Project Settings > API** (or **Data API** /
+   **API Keys**):
+   - the **Project URL** (`https://<ref>.supabase.co`);
+   - the **anon** or **publishable** key. Never use the `service_role` /
+     secret key: it bypasses the protections.
+3. **Add three repository variables** in GitHub: **Settings > Secrets and
+   variables > Actions > Variables > New repository variable**:
+   `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`,
+   `PUBLIC_CONTACT_EMAIL` (shown in the FAQ and on `/privacy/` for deletion
+   requests).
+4. **Redeploy:** **Actions > Deploy to GitHub Pages > Run workflow**. The
+   waitlist section, its buttons, and the privacy page appear.
+5. **See signups:** Supabase **Table Editor > waitlist**. Use **Export >
+   CSV** to download them.
+
+Good to know:
+- On Supabase's free plan, a project with no activity for a week is
+  paused. While paused, signups fail with the "Something broke" message.
+  Open the dashboard and restore it; signups themselves count as activity.
+- There's no rate limiting, so a determined bot could add junk rows. A
+  hidden trap field already drops simple bots. If spam shows up, add a
+  captcha (for example Cloudflare Turnstile).
 
 The site is served from `/devilsadvocate/`. The workflow passes that path
 to the build as `BASE_PATH`, so every link and asset is prefixed with it.
@@ -37,11 +71,17 @@ picks up the new address automatically on the next run.
    npm run build      # writes dist/
    npm run preview    # http://localhost:4321, serves dist/ exactly as a host would
    ```
-3. **Optional:** set this in the host's environment variables:
+3. **Have these values ready.** They go in the host's environment variables:
 
    | Variable | What it's for |
    | --- | --- |
    | `SITE_URL` | Your public address, e.g. `https://www.example.com`. Used for canonical links, the share image, and the sitemap. Until you have a domain you can leave it unset: both hosts pass their own URL to the build. |
+   | `PUBLIC_SUPABASE_URL` | Your Supabase project URL, for the waitlist. |
+   | `PUBLIC_SUPABASE_ANON_KEY` | Your Supabase anon/publishable key. |
+   | `PUBLIC_CONTACT_EMAIL` | Shown in the FAQ and on `/privacy`. |
+
+   Anything left unset shows up on the page as a literal `{{…}}`, so you'll
+   spot it.
 
 ### Option A: Vercel
 
@@ -116,7 +156,7 @@ you. The values below are only the common ones, to show you what to expect.
    point at your domain.
 4. Check it:
    - `https://your-domain/robots.txt` should list the sitemap.
-   - `https://your-domain/sitemap.xml` should list `/`.
+   - `https://your-domain/sitemap.xml` should list `/` and `/privacy/`.
    - Paste the URL into a share preview tool (for example LinkedIn's Post
      Inspector) to see the 1200x630 card.
 

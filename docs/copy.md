@@ -1,15 +1,16 @@
 # Devils Advocate: site copy
 
-Source of truth for all on-page text. You may tighten wording, but keep the tone and the facts. The waitlist was removed on September 23, 2026.
+Source of truth for all on-page text. You may tighten wording, but keep the tone and the facts. The waitlist stores signups in Supabase; the contact address comes from `PUBLIC_CONTACT_EMAIL`.
 
 ## Nav
-Logo: Devils Advocate (Fraunces). Links: How it works, What you get, FAQ.
+Logo: Devils Advocate (Fraunces). Links: How it works, What you get, FAQ. Button: Join the waitlist.
 
 ## Hero
 Headline: Your idea sounds great. That's what worries us.
 Subhead: Talk through your startup idea or big decision. Devils Advocate asks the awkward questions, brings receipts from failed startups and 2,000 years of philosophy, then hands the decision back to you. You're the boss. We just read the fine print.
-Primary button: See how it works
-Small print: Private beta opens December 1, 2026.
+Primary button: Join the waitlist
+Secondary link: See how it works
+Small print: Private beta opens December 1, 2026. No spam. We save the arguing for the product.
 
 Hero debate animation script (an illustration; plays once):
 1. USER (voice-note bubble with an animated waveform, which then turns into text): "I'm building food delivery for college hostels. Swiggy made it, so will I."
@@ -84,7 +85,23 @@ Heading: Things we refuse to do
 - What if I'm actually right? / Then you walk away more sure, with the counterarguments already handled. That's a win.
 - Do I have to talk? I'm shy. / Type if you prefer. The mic is for people who think out loud.
 - Who is it for? / MBA students, first-time founders, and anyone about to make a call they'd hate to get wrong.
-- Can I use it right now? / Not yet. Private beta opens December 1, 2026.
+- Can I use it right now? / Not yet. Private beta opens December 1, 2026, and the waitlist gets in first.
+- What do you do with my waitlist details? / We use them only to invite you to the beta. Email the contact address (PUBLIC_CONTACT_EMAIL) and we'll delete them.
+
+## Waitlist (final section)
+Heading: Got an idea you're completely sure about? Perfect.
+Subhead: Join the waitlist. We'll argue with you on December 1.
+Fields:
+- Email (required)
+- First name (optional)
+- I am a (single select): MBA student / First-time founder / Working professional / Just curious
+- What would you bring first? (multi-select chips): A startup idea / A life decision / A work proposal / A belief I want to test
+- The idea or decision you'd bring (optional, one line, placeholder: "e.g. I'm skipping placements to start a pet-food brand")
+Button: Join the waitlist
+Success: You're in. We'll email you before the beta opens on December 1. Until then, practice: doubt one thing you believed this morning.
+Invalid email: That email looks off. Check for typos and try again.
+Send failed: Something broke on our side, and it's not your idea's fault. Try again in a minute.
 
 ## Footer
 Built by Avinash G, an MBA student who heard "great idea" one too many times.
+Links: Privacy (a short static page: we collect your email and waitlist answers only to invite you to the beta; they are stored in our database, hosted by Supabase; email the contact address to have them deleted).

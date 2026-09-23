@@ -1,0 +1,287 @@
+---
+/**
+ * The waitlist. The form is the user's voice (Bricolage, teal choices);
+ * the reply after joining is the product's (a ProductLine). Signups go
+ * straight from the browser into the Supabase `waitlist` table, which the
+ * public can add to but not read. See supabase/migrations/.
+ */
+import ProductLine from './ProductLine.astro';
+import { SECTIONS, WAITLIST, path } from '../config';
+
+const ROLES = [
+  { value: 'mba_student', label: 'MBA student' },
+  { value: 'first_time_founder', label: 'First-time founder' },
+  { value: 'working_professional', label: 'Working professional' },
+  { value: 'just_curious', label: 'Just curious' },
+];
+
+const BRING = [
+  { value: 'startup_idea', label: 'A startup idea' },
+  { value: 'life_decision', label: 'A life decision' },
+  { value: 'work_proposal', label: 'A work proposal' },
+  { value: 'belief', label: 'A belief I want to test' },
+];
+
+const check = `<svg class="chip__check" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+---
+
+<section id={SECTIONS.waitlist} aria-labelledby="waitlist-heading" class="section container-page">
+  <div class="split">
+    <div>
+      <h2 id="waitlist-heading" class="max-w-[16ch]">Got an idea you’re completely sure about? Perfect.</h2>
+      <p class="waitlist__sub">Join the waitlist. We’ll argue with you on December 1.</p>
+    </div>
+
+    <div>
+      <form
+        class="waitlist"
+        data-waitlist
+        data-endpoint={`${WAITLIST.supabaseUrl}/rest/v1/waitlist`}
+        data-key={WAITLIST.supabaseKey}
+        novalidate
+      >
+        <div class="field">
+          <label for="wl-email" class="field__label">Email</label>
+          <input
+            id="wl-email"
+            class="field__input"
+            type="email"
+            name="email"
+            autocomplete="email"
+            inputmode="email"
+            maxlength="254"
+            required
+            aria-describedby="wl-email-error"
+          />
+          <p id="wl-email-error" class="field__error" data-email-error hidden>
+            That email looks off. Check for typos and try again.
+          </p>
+        </div>
+
+        <div class="field">
+          <label for="wl-name" class="field__label">First name <span class="field__opt">(optional)</span></label>
+          <input id="wl-name" class="field__input" type="text" name="first_name" autocomplete="given-name" maxlength="80" />
+        </div>
+
+        <fieldset class="field">
+          <legend class="field__label">I am a <span class="field__opt">(pick one)</span></legend>
+          <div class="chips">
+            {
+              ROLES.map((r) => (
+                <label class="chip">
+                  <input type="radio" name="role" value={r.value} />
+                  <Fragment set:html={check} />
+                  <span>{r.label}</span>
+                </label>
+              ))
+            }
+          </div>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend class="field__label">What would you bring first? <span class="field__opt">(pick any)</span></legend>
+          <div class="chips">
+            {
+              BRING.map((b) => (
+                <label class="chip">
+                  <input type="checkbox" name="bring" value={b.value} />
+                  <Fragment set:html={check} />
+                  <span>{b.label}</span>
+                </label>
+              ))
+            }
+          </div>
+        </fieldset>
+
+        <div class="field">
+          <label for="wl-idea" class="field__label">
+            The idea or decision you’d bring <span class="field__opt">(optional)</span>
+          </label>
+          <input
+            id="wl-idea"
+            class="field__input"
+            type="text"
+            name="idea"
+            maxlength="200"
+            placeholder="e.g. I’m skipping placements to start a pet-food brand"
+          />
+        </div>
+
+        <!-- Left empty by people, filled in by bots; a filled one is dropped. -->
+        <div class="waitlist__trap" aria-hidden="true">
+          <label>Leave this empty <input type="text" name="company" tabindex="-1" autocomplete="off" /></label>
+        </div>
+
+        <div class="waitlist__actions">
+          <button type="submit" class="btn-primary" data-submit>Join the waitlist</button>
+          <p class="waitlist__fine">
+            We use your details only to invite you to the beta. <a class="link-quiet" href={path('/privacy/')}>Privacy</a>
+          </p>
+        </div>
+
+        <p class="waitlist__status" role="status" aria-live="polite" data-status></p>
+
+        <noscript>
+          <p class="waitlist__status">The waitlist needs JavaScript to send your details. Turn it on to join.</p>
+        </noscript>
+      </form>
+
+      <div class="waitlist__done" data-done tabindex="-1" hidden>
+        <ProductLine size="lg">
+          You’re in. We’ll email you before the beta opens on December 1. Until then, practice: doubt one thing you
+          believed this morning.
+        </ProductLine>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initWaitlist } from '../scripts/waitlist';
+  initWaitlist();
+</script>
+
+<style>
+  .waitlist__sub {
+    margin-top: 1.25rem;
+    max-width: 30ch;
+    font-size: var(--step-1);
+    line-height: 1.4;
+  }
+
+  .waitlist {
+    display: grid;
+    gap: 1.75rem;
+    max-width: 36rem;
+  }
+
+  .field {
+    display: grid;
+    gap: 0.5rem;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .field__label {
+    padding: 0;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  .field__opt {
+    font-weight: 400;
+    color: var(--ink-muted);
+  }
+
+  /* 17px or more, so iOS doesn't zoom into the field on focus. */
+  .field__input {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.625rem 0.875rem;
+    border: 1.5px solid var(--ink-muted);
+    border-radius: var(--radius-control);
+    background: var(--surface);
+    color: var(--ink);
+    font: inherit;
+    font-size: max(1.0625rem, var(--step-0));
+  }
+  .field__input::placeholder {
+    color: var(--ink-muted);
+    opacity: 1;
+  }
+  .field__input[aria-invalid='true'] {
+    border-color: var(--devil);
+    border-width: 2px;
+  }
+
+  .field__error {
+    font-size: var(--step--1);
+    font-weight: 500;
+    color: var(--devil);
+  }
+
+  /* Choices are the user's voice: teal when picked, plus a tick, so the
+     state never relies on color alone. */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .chip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    min-height: 2.75rem;
+    padding: 0.5rem 0.875rem;
+    border: 1.5px solid var(--rule);
+    border-radius: 999px;
+    background: var(--surface);
+    font-weight: 500;
+    line-height: 1.25;
+    cursor: pointer;
+  }
+  .chip input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .chip :global(.chip__check) {
+    display: none;
+    color: var(--you);
+  }
+  .chip:has(input:checked) {
+    border-color: var(--you);
+    background: color-mix(in srgb, var(--you) 10%, var(--surface));
+  }
+  .chip:has(input:checked) :global(.chip__check) {
+    display: block;
+  }
+  .chip:has(input:focus-visible) {
+    outline: 3px solid var(--ink);
+    outline-offset: 3px;
+  }
+  .chip:hover {
+    border-color: var(--ink-muted);
+  }
+
+  .waitlist__trap {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .waitlist__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+  }
+  .waitlist__actions button[aria-busy='true'] {
+    cursor: progress;
+    opacity: 0.8;
+  }
+
+  .waitlist__fine {
+    font-size: var(--step--1);
+    color: var(--ink-muted);
+  }
+
+  .waitlist__status:empty {
+    display: none;
+  }
+  .waitlist__status {
+    font-weight: 500;
+    color: var(--devil);
+  }
+
+  .waitlist__done {
+    max-width: 36rem;
+    outline: none;
+  }
+</style>

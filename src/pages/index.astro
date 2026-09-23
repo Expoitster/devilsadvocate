@@ -8,6 +8,8 @@ import WhatYouGet from '../components/WhatYouGet.astro';
 import Refuse from '../components/Refuse.astro';
 import Faq from '../components/Faq.astro';
 import HowItWorks from '../components/HowItWorks.astro';
+import Waitlist from '../components/Waitlist.astro';
+import { WAITLIST_ON } from '../config';
 ---
 
 <Base>
@@ -19,4 +21,5 @@ import HowItWorks from '../components/HowItWorks.astro';
   <WhatYouGet />
   <Refuse />
   <Faq />
+  {WAITLIST_ON && <Waitlist />}
 </Base>

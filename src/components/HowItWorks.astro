@@ -1,7 +1,7 @@
 ---
 import JourneyShot from './JourneyShot.astro';
 import { MODES, MODE_LABEL, STEPS } from '../data/journey';
-import { SECTIONS } from '../config';
+import { SECTIONS, WAITLIST_ON } from '../config';
 ---
 
 <section id={SECTIONS.howItWorks} aria-labelledby="journey-heading" class="section container-page">
@@ -59,6 +59,13 @@ import { SECTIONS } from '../config';
             <button type="button" class="journey__back" data-back>Back</button>
             <p class="journey__count" data-count aria-hidden="true">Step 1 of 7</p>
             <button type="button" class="btn-primary journey__next" data-next>Next</button>
+            {
+              WAITLIST_ON && (
+                <a href={`#${SECTIONS.waitlist}`} class="btn-primary journey__join" data-join hidden>
+                  Join the waitlist
+                </a>
+              )
+            }
           </div>
         </div>
       </div>
@@ -270,7 +277,8 @@ import { SECTIONS } from '../config';
       display: none;
     }
   }
-  .journey__next {
+  .journey__next,
+  .journey__join {
     cursor: pointer;
   }
 

@@ -40,6 +40,12 @@ jobs:
         env:
           SITE_URL: ${{ steps.pages.outputs.origin }}
           BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          # Waitlist settings: Settings > Secrets and variables > Actions >
+          # Variables. These are public values (they end up in the page).
+          # Until all three are set, the site builds without the waitlist.
+          PUBLIC_SUPABASE_URL: ${{ vars.PUBLIC_SUPABASE_URL }}
+          PUBLIC_SUPABASE_ANON_KEY: ${{ vars.PUBLIC_SUPABASE_ANON_KEY }}
+          PUBLIC_CONTACT_EMAIL: ${{ vars.PUBLIC_CONTACT_EMAIL }}
 
       - uses: actions/upload-pages-artifact@v5
         with:

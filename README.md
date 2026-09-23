@@ -1,6 +1,6 @@
 # Devils Advocate: coming-soon site
 
-A static marketing site built with Astro and Tailwind CSS. No backend, no forms: it collects nothing.
+A static marketing site built with Astro and Tailwind CSS. There is no backend of our own: waitlist signups go straight from the browser into an insert-only Supabase table (`supabase/migrations/`).
 
 The brief is in `CLAUDE.md`, and all page copy is in `docs/copy.md`.
 
@@ -15,7 +15,9 @@ npm run preview    # serve dist/ locally
 
 While `npm run dev` is running, `/_components` shows every voice component. That page is dev-only and is left out of the build.
 
-## Deploying
+## Before launch
+
+The waitlist appears once `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`, and `PUBLIC_CONTACT_EMAIL` are set: as GitHub Actions variables for the live site, or in `.env` locally (see `.env.example`). Setup steps: `docs/deploy.md`.
 
 Live on GitHub Pages at https://expoitster.github.io/devilsadvocate/ (published by `.github/workflows/pages.yml`). For Vercel, Netlify, or a custom domain, see `docs/deploy.md`.
 

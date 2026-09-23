@@ -1,7 +1,7 @@
 ---
 import UserLine from './UserLine.astro';
 import ProductLine from './ProductLine.astro';
-import { SECTIONS } from '../config';
+import { SECTIONS, WAITLIST, WAITLIST_ON } from '../config';
 ---
 
 <section id={SECTIONS.faq} aria-labelledby="faq-heading" class="section container-page">
@@ -62,9 +62,26 @@ import { SECTIONS } from '../config';
           <UserLine as="span" bodyAs="span" speaker={false}>Can I use it right now?</UserLine>
         </summary>
         <ProductLine speaker={false} class="faq__a">
-          Not yet. Private beta opens <time datetime="2026-12-01">December 1, 2026</time>.
+          Not yet. Private beta opens <time datetime="2026-12-01">December 1, 2026</time>{
+            WAITLIST_ON ? ', and the waitlist gets in first.' : '.'
+          }
         </ProductLine>
       </details>
+
+      {
+        WAITLIST_ON && (
+        <details class="faq__item">
+          <summary class="faq__q">
+            <UserLine as="span" bodyAs="span" speaker={false}>What do you do with my waitlist details?</UserLine>
+          </summary>
+          <ProductLine speaker={false} class="faq__a">
+            We use them only to invite you to the beta. Email <a class="faq__mail" href={`mailto:${WAITLIST.contactEmail}`}
+              >{WAITLIST.contactEmail}</a
+            > and we’ll delete them.
+          </ProductLine>
+        </details>
+        )
+      }
     </div>
   </div>
 </section>
@@ -116,5 +133,10 @@ import { SECTIONS } from '../config';
 
   .faq__item :global(.faq__a) {
     padding-bottom: 1.5rem;
+  }
+
+  .faq__mail {
+    text-decoration-line: underline;
+    overflow-wrap: anywhere;
   }
 </style>

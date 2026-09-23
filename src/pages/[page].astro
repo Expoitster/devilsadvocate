@@ -1,0 +1,29 @@
+---
+// The privacy page, built only while the waitlist is on: it describes the
+// waitlist data, so without a waitlist there is nothing to describe.
+// (A dynamic route, because a plain page file would always be built.)
+import Base from '../layouts/Base.astro';
+import { WAITLIST, WAITLIST_ON, path } from '../config';
+
+export function getStaticPaths() {
+  return WAITLIST_ON ? [{ params: { page: 'privacy' } }] : [];
+}
+---
+
+<Base title="Privacy" description="What Devils Advocate does with your waitlist details.">
+  <article class="container-page py-[calc(var(--section-gap)/2)]">
+    <h1 class="max-w-[16ch] !text-step-4">Privacy</h1>
+    <div class="mt-8 max-w-measure space-y-4">
+      <p>
+        When you join the waitlist we collect your email and your waitlist answers (first name, what you do, what you’d
+        bring, and your idea, if you give them). We use them only to invite you to the beta.
+      </p>
+      <p>They are stored in our database, hosted by Supabase. We don’t share or sell them.</p>
+      <p>
+        Email <a class="link-quiet" href={`mailto:${WAITLIST.contactEmail}`}>{WAITLIST.contactEmail}</a> to have them
+        deleted.
+      </p>
+      <p><a class="link-quiet inline-flex min-h-11 items-center" href={path('/')}>Back to the home page</a></p>
+    </div>
+  </article>
+</Base>
