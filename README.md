@@ -1,6 +1,6 @@
 # Devils Advocate: coming-soon site
 
-A static marketing site built with Astro and Tailwind CSS. There is no backend of our own: waitlist signups go straight from the browser into an insert-only Supabase table (`supabase/migrations/`).
+A static marketing site built with Astro and Tailwind CSS. There is no backend of our own: waitlist signups go straight from the browser into an insert-only Supabase table (`supabase/waitlist.sql`), via `supabase-js`.
 
 The brief is in `CLAUDE.md`, and all page copy is in `docs/copy.md`.
 

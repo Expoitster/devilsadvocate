@@ -15,13 +15,16 @@ export function getStaticPaths() {
     <h1 class="max-w-[16ch] !text-step-4">Privacy</h1>
     <div class="mt-8 max-w-measure space-y-4">
       <p>
-        When you join the waitlist we collect your email and your waitlist answers (first name, what you do, what you’d
-        bring, and your idea, if you give them). We use them only to invite you to the beta.
+        When you join the waitlist we collect your email, your first name, your role, your interests, the optional
+        one-line idea you’d bring, where you came from (the traffic source, if the link you followed named one),
+        and your consent to be emailed.
       </p>
-      <p>They are stored in our database, hosted by Supabase. We don’t share or sell them.</p>
       <p>
-        Email <a class="link-quiet" href={`mailto:${WAITLIST.contactEmail}`}>{WAITLIST.contactEmail}</a> to have them
-        deleted.
+        It’s stored in our Supabase database and used only to contact you about the beta. We never sell it.
+      </p>
+      <p>
+        Email <a class="link-quiet" href={`mailto:${WAITLIST.contactEmail}`}>{WAITLIST.contactEmail}</a> and we’ll
+        delete your data.
       </p>
       <p><a class="link-quiet inline-flex min-h-11 items-center" href={path('/')}>Back to the home page</a></p>
     </div>

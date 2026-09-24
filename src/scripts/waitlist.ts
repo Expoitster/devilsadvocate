@@ -1,53 +1,76 @@
 /**
- * Sends a waitlist signup straight to Supabase's REST API (PostgREST).
- * The key is the project's public anon/publishable key; the table only
- * accepts inserts from it, so nothing here can read the list back.
+ * The waitlist form. It inserts one row into Supabase's `waitlist` table
+ * with the public key; row-level security allows exactly that and nothing
+ * else (see supabase/waitlist.sql). The checks below mirror the table's
+ * constraints, so people see a clear message instead of a database error.
  */
 
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+// Same rule as the table's check: something@something.something, no spaces.
+const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/i;
+const LIMITS = { email: 254, first_name: 80, first_challenge: 280, source: 100 };
 const TIMEOUT_MS = 15000;
 
 const COPY = {
-  invalid: 'That email looks off. Check for typos and try again.',
+  invalidEmail: 'That email looks off. Check for typos and try again.',
+  consent: 'Tick the box so we can email you about the beta.',
+  tooLong: 'That’s a bit long. Trim it and try again.',
+  checkFailed: 'Something in the form looks off. Check your email and try again.',
   failed: 'Something broke on our side, and it’s not your idea’s fault. Try again in a minute.',
+  joining: 'Joining…',
 };
+
+type Supabase = typeof import('../lib/supabase').supabase;
+let client: Promise<Supabase> | null = null;
+// Load the Supabase library only for people who use the form.
+const loadClient = () => (client ??= import('../lib/supabase').then((m) => m.supabase));
+
+/** utm_source, or failing that ref, from the page URL. */
+function trafficSource(): string | null {
+  const params = new URLSearchParams(location.search);
+  const value = (params.get('utm_source') ?? params.get('ref') ?? '').trim().slice(0, LIMITS.source);
+  return value || null;
+}
 
 export function initWaitlist(): void {
   const form = document.querySelector<HTMLFormElement>('[data-waitlist]');
   const done = document.querySelector<HTMLElement>('[data-done]');
   if (!form || !done) return;
 
-  const endpoint = form.dataset.endpoint ?? '';
-  const key = form.dataset.key ?? '';
   const email = form.querySelector<HTMLInputElement>('input[name="email"]')!;
   const emailError = form.querySelector<HTMLElement>('[data-email-error]')!;
+  const consent = form.querySelector<HTMLInputElement>('[data-consent]')!;
+  const consentError = form.querySelector<HTMLElement>('[data-consent-error]')!;
   const status = form.querySelector<HTMLElement>('[data-status]')!;
   const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+  const submitLabel = submit.textContent ?? '';
   let sending = false;
 
-  // New-style publishable keys go in `apikey` only; legacy anon keys are
-  // JWTs and also go in Authorization.
-  const headers: Record<string, string> = {
-    apikey: key,
-    'Content-Type': 'application/json',
-    Prefer: 'return=minimal',
+  // Errors: mark the field, show its message under it, announce it, and
+  // put focus on it.
+  const flag = (field: HTMLInputElement, message: HTMLElement, text: string) => {
+    field.setAttribute('aria-invalid', 'true');
+    message.textContent = text;
+    message.hidden = false;
+    status.textContent = text;
+    field.focus();
   };
-  if (key.startsWith('eyJ')) headers.Authorization = `Bearer ${key}`;
-
-  const setInvalid = (invalid: boolean) => {
-    email.setAttribute('aria-invalid', String(invalid));
-    emailError.hidden = !invalid;
+  const clear = (field: HTMLInputElement, message: HTMLElement) => {
+    field.removeAttribute('aria-invalid');
+    message.hidden = true;
   };
 
-  const finish = () => {
+  const finish = (already = false) => {
+    done.querySelector<HTMLElement>('[data-done-joined]')!.hidden = already;
+    done.querySelector<HTMLElement>('[data-done-already]')!.hidden = !already;
     form.hidden = true;
     done.hidden = false;
     done.focus();
   };
 
-  const text = (name: string, max: number) => {
-    const value = String(new FormData(form).get(name) ?? '').trim().slice(0, max);
-    return value || null;
+  const setSending = (on: boolean) => {
+    sending = on;
+    submit.disabled = on;
+    submit.textContent = on ? COPY.joining : submitLabel;
   };
 
   // Any "Join the waitlist" link on this page: scroll to the form and put
@@ -63,9 +86,9 @@ export function initWaitlist(): void {
     (form.hidden ? done : email).focus({ preventScroll: true });
   });
 
-  email.addEventListener('input', () => {
-    if (email.getAttribute('aria-invalid') === 'true') setInvalid(false);
-  });
+  form.addEventListener('focusin', () => void loadClient(), { once: true });
+  email.addEventListener('input', () => clear(email, emailError));
+  consent.addEventListener('change', () => consent.checked && clear(consent, consentError));
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -73,57 +96,67 @@ export function initWaitlist(): void {
     status.textContent = '';
 
     const data = new FormData(form);
-    // A bot filled the hidden field: act as if it worked, send nothing.
+    // A bot filled the hidden field: look like it worked, store nothing.
     if (String(data.get('company') ?? '').trim()) {
       finish();
       return;
     }
 
-    const address = String(data.get('email') ?? '').trim().toLowerCase();
-    if (address.length > 254 || !EMAIL.test(address)) {
-      setInvalid(true);
-      email.focus();
+    const text = (name: string) => String(data.get(name) ?? '').trim();
+    const address = text('email').toLowerCase();
+    if (address.length > LIMITS.email || !EMAIL.test(address)) {
+      flag(email, emailError, COPY.invalidEmail);
       return;
     }
-    setInvalid(false);
+    clear(email, emailError);
 
-    const payload = {
-      email: address,
-      first_name: text('first_name', 80),
-      role: data.get('role') || null,
-      bring: data.getAll('bring').map(String),
-      idea: text('idea', 200),
-    };
+    if (!consent.checked) {
+      flag(consent, consentError, COPY.consent);
+      return;
+    }
+    clear(consent, consentError);
 
-    sending = true;
-    submit.setAttribute('aria-busy', 'true');
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(payload),
-        signal: 'timeout' in AbortSignal ? AbortSignal.timeout(TIMEOUT_MS) : undefined,
-      });
-      // 409: this email already joined. Same outcome for the person.
-      if (response.ok || response.status === 409) {
-        finish();
+    // The inputs' maxlength already stops this; checked again to match
+    // the table exactly.
+    for (const name of ['first_name', 'first_challenge'] as const) {
+      if (text(name).length > LIMITS[name]) {
+        status.textContent = COPY.tooLong;
+        form.querySelector<HTMLInputElement>(`[name="${name}"]`)?.focus();
         return;
       }
-      // The database rejected the email's format (check constraint).
-      if (response.status === 400) {
-        const body = (await response.json().catch(() => null)) as { code?: string; message?: string } | null;
-        if (body?.code === '23514' && body.message?.includes('email')) {
-          setInvalid(true);
-          email.focus();
-          return;
-        }
+    }
+
+    const row = {
+      email: address,
+      first_name: text('first_name') || null,
+      role: text('role') || null,
+      interests: data.getAll('interests').map(String),
+      first_challenge: text('first_challenge') || null,
+      source: trafficSource(),
+      consent: true,
+    };
+
+    setSending(true);
+    try {
+      const supabase = await loadClient();
+      // Insert only. No .select(): the public key can't read rows back.
+      let query = supabase.from('waitlist').insert(row);
+      if ('timeout' in AbortSignal) query = query.abortSignal(AbortSignal.timeout(TIMEOUT_MS));
+      const { error } = await query;
+
+      if (!error) {
+        finish();
+      } else if (error.code === '23505') {
+        finish(true); // this email is already on the list
+      } else if (error.code === '23514') {
+        flag(email, emailError, COPY.checkFailed);
+      } else {
+        status.textContent = COPY.failed;
       }
-      status.textContent = COPY.failed;
     } catch {
       status.textContent = COPY.failed;
     } finally {
-      sending = false;
-      submit.removeAttribute('aria-busy');
+      setSending(false);
     }
   });
 }

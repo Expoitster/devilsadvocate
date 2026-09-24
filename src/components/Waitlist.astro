@@ -3,24 +3,14 @@
  * The waitlist. The form is the user's voice (Bricolage, teal choices);
  * the reply after joining is the product's (a ProductLine). Signups go
  * straight from the browser into the Supabase `waitlist` table, which the
- * public can add to but not read. See supabase/migrations/.
+ * public can add to but not read. See supabase/waitlist.sql. The values
+ * sent for role and interests are the labels, as the table's checks expect.
  */
 import ProductLine from './ProductLine.astro';
-import { SECTIONS, WAITLIST, path } from '../config';
+import { SECTIONS, path } from '../config';
 
-const ROLES = [
-  { value: 'mba_student', label: 'MBA student' },
-  { value: 'first_time_founder', label: 'First-time founder' },
-  { value: 'working_professional', label: 'Working professional' },
-  { value: 'just_curious', label: 'Just curious' },
-];
-
-const BRING = [
-  { value: 'startup_idea', label: 'A startup idea' },
-  { value: 'life_decision', label: 'A life decision' },
-  { value: 'work_proposal', label: 'A work proposal' },
-  { value: 'belief', label: 'A belief I want to test' },
-];
+const ROLES = ['MBA student', 'First-time founder', 'Working professional', 'Just curious'];
+const INTERESTS = ['A startup idea', 'A life decision', 'A work proposal', 'A belief I want to test'];
 
 const check = `<svg class="chip__check" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 ---
@@ -33,13 +23,7 @@ const check = `<svg class="chip__check" viewBox="0 0 16 16" width="14" height="1
     </div>
 
     <div>
-      <form
-        class="waitlist"
-        data-waitlist
-        data-endpoint={`${WAITLIST.supabaseUrl}/rest/v1/waitlist`}
-        data-key={WAITLIST.supabaseKey}
-        novalidate
-      >
+      <form class="waitlist" data-waitlist novalidate>
         <div class="field">
           <label for="wl-email" class="field__label">Email</label>
           <input
@@ -49,7 +33,6 @@ const check = `<svg class="chip__check" viewBox="0 0 16 16" width="14" height="1
             name="email"
             autocomplete="email"
             inputmode="email"
-            maxlength="254"
             required
             aria-describedby="wl-email-error"
           />
@@ -67,11 +50,11 @@ const check = `<svg class="chip__check" viewBox="0 0 16 16" width="14" height="1
           <legend class="field__label">I am a <span class="field__opt">(pick one)</span></legend>
           <div class="chips">
             {
-              ROLES.map((r) => (
+              ROLES.map((role) => (
                 <label class="chip">
-                  <input type="radio" name="role" value={r.value} />
+                  <input type="radio" name="role" value={role} />
                   <Fragment set:html={check} />
-                  <span>{r.label}</span>
+                  <span>{role}</span>
                 </label>
               ))
             }
@@ -82,11 +65,11 @@ const check = `<svg class="chip__check" viewBox="0 0 16 16" width="14" height="1
           <legend class="field__label">What would you bring first? <span class="field__opt">(pick any)</span></legend>
           <div class="chips">
             {
-              BRING.map((b) => (
+              INTERESTS.map((interest) => (
                 <label class="chip">
-                  <input type="checkbox" name="bring" value={b.value} />
+                  <input type="checkbox" name="interests" value={interest} />
                   <Fragment set:html={check} />
-                  <span>{b.label}</span>
+                  <span>{interest}</span>
                 </label>
               ))
             }
@@ -94,17 +77,37 @@ const check = `<svg class="chip__check" viewBox="0 0 16 16" width="14" height="1
         </fieldset>
 
         <div class="field">
-          <label for="wl-idea" class="field__label">
+          <label for="wl-challenge" class="field__label">
             The idea or decision you’d bring <span class="field__opt">(optional)</span>
           </label>
           <input
-            id="wl-idea"
+            id="wl-challenge"
             class="field__input"
             type="text"
-            name="idea"
-            maxlength="200"
+            name="first_challenge"
+            maxlength="280"
             placeholder="e.g. I’m skipping placements to start a pet-food brand"
           />
+        </div>
+
+        <div class="field">
+          <div class="consent">
+            <label class="consent__label">
+              <input
+                type="checkbox"
+                name="consent"
+                class="consent__box"
+                required
+                aria-describedby="wl-consent-error"
+                data-consent
+              />
+              <span>Email me about the Devils Advocate beta. Unsubscribe anytime.</span>
+            </label>
+            <a class="link-quiet consent__privacy" href={path('/privacy/')}>Privacy</a>
+          </div>
+          <p id="wl-consent-error" class="field__error" data-consent-error hidden>
+            Tick the box so we can email you about the beta.
+          </p>
         </div>
 
         {/* Left empty by people, filled in by bots; a filled one is dropped. */}
@@ -114,23 +117,22 @@ const check = `<svg class="chip__check" viewBox="0 0 16 16" width="14" height="1
 
         <div class="waitlist__actions">
           <button type="submit" class="btn-primary" data-submit>Join the waitlist</button>
-          <p class="waitlist__fine">
-            We use your details only to invite you to the beta. <a class="link-quiet" href={path('/privacy/')}>Privacy</a>
-          </p>
         </div>
 
         <p class="waitlist__status" role="status" aria-live="polite" data-status></p>
 
         <noscript>
-          <p class="waitlist__status">The waitlist needs JavaScript to send your details. Turn it on to join.</p>
+          <p class="waitlist__status">Please enable JavaScript to join the waitlist.</p>
         </noscript>
       </form>
 
+      {/* After joining, the product answers. A repeat signup gets its own line. */}
       <div class="waitlist__done" data-done tabindex="-1" hidden>
-        <ProductLine size="lg">
+        <ProductLine size="lg" data-done-joined>
           You’re in. We’ll email you before the beta opens on December 1. Until then, practice: doubt one thing you
           believed this morning.
         </ProductLine>
+        <ProductLine size="lg" data-done-already hidden>You’re already on the list. Eager. We respect it.</ProductLine>
       </div>
     </div>
   </div>
@@ -267,9 +269,38 @@ const check = `<svg class="chip__check" viewBox="0 0 16 16" width="14" height="1
     opacity: 0.8;
   }
 
-  .waitlist__fine {
-    font-size: var(--step--1);
-    color: var(--ink-muted);
+  /* Consent: a real checkbox (teal when ticked), its sentence, and the
+     privacy link beside it. The whole label is the tap target. */
+  .consent {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 1rem;
+  }
+  .consent__label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    min-height: 2.75rem;
+    padding-top: 0.25rem;
+    cursor: pointer;
+  }
+  .consent__box {
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: 0.2em;
+    accent-color: var(--you);
+    cursor: pointer;
+  }
+  .consent__box[aria-invalid='true'] {
+    outline: 2px solid var(--devil);
+    outline-offset: 2px;
+  }
+  .consent__privacy {
+    min-height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
   }
 
   .waitlist__status:empty {

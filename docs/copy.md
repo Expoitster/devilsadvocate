@@ -136,12 +136,19 @@ Fields:
 - First name (optional)
 - I am a (single select): MBA student / First-time founder / Working professional / Just curious
 - What would you bring first? (multi-select chips): A startup idea / A life decision / A work proposal / A belief I want to test
-- The idea or decision you'd bring (optional, one line, placeholder: "e.g. I'm skipping placements to start a pet-food brand")
+- The idea or decision you'd bring (optional, one line, max 280 characters, placeholder: "e.g. I'm skipping placements to start a pet-food brand")
+- Consent (required checkbox): "Email me about the Devils Advocate beta. Unsubscribe anytime." with a link to /privacy
+- Hidden: the traffic source, from `utm_source` or `ref` in the URL (max 100 characters)
 Button: Join the waitlist
 Success: You're in. We'll email you before the beta opens on December 1. Until then, practice: doubt one thing you believed this morning.
+While sending: the button is disabled and reads "Joining…"
+Already on the list (database code 23505): You're already on the list. Eager. We respect it.
 Invalid email: That email looks off. Check for typos and try again.
+A database check failed (code 23514): Something in the form looks off. Check your email and try again.
+Consent not ticked: Tick the box so we can email you about the beta.
+Without JavaScript: Please enable JavaScript to join the waitlist.
 Send failed: Something broke on our side, and it's not your idea's fault. Try again in a minute.
 
 ## Footer
 Built by Avinash G, an MBA student who heard "great idea" one too many times.
-Links: Privacy (a short static page: we collect your email and waitlist answers only to invite you to the beta; they are stored in our database, hosted by Supabase; email the contact address to have them deleted).
+Links: Privacy (a short static page: we collect email, first name, role, interests, the optional one-line idea, the traffic source, and consent; it's stored in our Supabase database, used only to contact the person about the beta, and never sold; anyone can email the contact address to have their data deleted).

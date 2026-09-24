@@ -27,9 +27,9 @@ but can't read, change, or delete anything; you see the list in the
 Supabase dashboard.
 
 1. **Create the table.** In Supabase, open your project, then **SQL Editor >
-   New query**. Paste the contents of
-   `supabase/migrations/20260923120000_waitlist.sql` and click **Run**. It's
-   safe to run twice.
+   New query**. Paste the contents of `supabase/waitlist.sql` and click
+   **Run**. Run it once: if a `waitlist` table already exists, it stops with
+   "relation already exists".
 2. **Copy two values** from **Project Settings > API** (or **Data API** /
    **API Keys**):
    - the **Project URL** (`https://<ref>.supabase.co`);
@@ -49,6 +49,9 @@ Good to know:
 - On Supabase's free plan, a project with no activity for a week is
   paused. While paused, signups fail with the "Something broke" message.
   Open the dashboard and restore it; signups themselves count as activity.
+- If signups fail with "permission denied", the project isn't giving the
+  public role access to new tables. Run `grant insert on public.waitlist to
+  anon;` in the SQL Editor.
 - There's no rate limiting, so a determined bot could add junk rows. A
   hidden trap field already drops simple bots. If spam shows up, add a
   captcha (for example Cloudflare Turnstile).

@@ -1,6 +1,6 @@
 You are building a STATIC marketing website for a product that is coming soon. The site's only job: make visitors understand the idea and the step-by-step journey they will get, then join a waitlist.
 
-Waitlist storage (September 23, 2026): signups go into a Supabase table (`public.waitlist`, see `supabase/migrations/`). The browser writes to it directly with the public anon/publishable key; row-level security lets the public insert and nothing else, so the list is readable only from the Supabase dashboard. Never put a service-role key in the site. The waitlist (form, buttons, FAQ answer, privacy page) is built only when `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`, and `PUBLIC_CONTACT_EMAIL` are all set (`WAITLIST_ON` in `src/config.ts`).
+Waitlist storage (September 24, 2026): signups go into a Supabase table (`public.waitlist`, defined in `supabase/waitlist.sql` and run by hand in the Supabase SQL Editor). The browser inserts one row directly with `supabase-js` and the public anon/publishable key (`src/lib/supabase.ts`, `persistSession: false`); row-level security allows insert (with `consent = true`) and nothing else, and database checks enforce the email format, lengths, and allowed values. So the list is readable only from the Supabase dashboard. Never use or ask for a service-role or secret key. The waitlist (form, buttons, FAQ answer, privacy page) is built only when `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`, and `PUBLIC_CONTACT_EMAIL` are all set (`WAITLIST_ON` in `src/config.ts`).
 
 Hard scope rules:
 - Static site only: no backend of our own, no API routes, no login, no checkout, no payment code. The only database is the insert-only Supabase waitlist table.
@@ -84,7 +84,7 @@ Quality floor: responsive from 360px up, visible keyboard focus, WCAG AA contras
 # TECH
 - Astro (static output) with Tailwind CSS, mapping the tokens to Tailwind theme colors.
 - Small vanilla TypeScript for the hero animation, step-through, mobile menu, and form. No React needed.
-- Waitlist form: plain HTML form; `src/scripts/waitlist.ts` POSTs it to Supabase's REST API (`/rest/v1/waitlist`). No backend of our own.
+- Waitlist form: plain HTML form; `src/scripts/waitlist.ts` inserts one row with `supabase.from('waitlist').insert({...})` (never `.select()`: there is no select policy). The library loads only when someone uses the form. No backend of our own.
 - Deploy target: GitHub Pages (.github/workflows/pages.yml); any static host works.
 
 # COPY (use it; you may tighten wording, but keep the tone and the facts)
@@ -223,15 +223,22 @@ Fields:
 - First name (optional)
 - I am a (single select): MBA student / First-time founder / Working professional / Just curious
 - What would you bring first? (multi-select chips): A startup idea / A life decision / A work proposal / A belief I want to test
-- The idea or decision you'd bring (optional, one line, placeholder: "e.g. I'm skipping placements to start a pet-food brand")
+- The idea or decision you'd bring (optional, one line, max 280 characters, placeholder: "e.g. I'm skipping placements to start a pet-food brand")
+- Consent (required checkbox): "Email me about the Devils Advocate beta. Unsubscribe anytime." with a link to /privacy
+- Hidden: the traffic source, from `utm_source` or `ref` in the URL (max 100 characters)
 Button: Join the waitlist
 Success: You're in. We'll email you before the beta opens on December 1. Until then, practice: doubt one thing you believed this morning.
+While sending: the button is disabled and reads "Joining…"
+Already on the list (database code 23505): You're already on the list. Eager. We respect it.
 Invalid email: That email looks off. Check for typos and try again.
+A database check failed (code 23514): Something in the form looks off. Check your email and try again.
+Consent not ticked: Tick the box so we can email you about the beta.
+Without JavaScript: Please enable JavaScript to join the waitlist.
 Send failed: Something broke on our side, and it's not your idea's fault. Try again in a minute.
 
 ## Footer
 Built by Avinash G, an MBA student who heard "great idea" one too many times.
-Links: Privacy (a short static page: we collect your email and waitlist answers only to invite you to the beta; they are stored in our database, hosted by Supabase; email the contact address to have them deleted).
+Links: Privacy (a short static page: we collect email, first name, role, interests, the optional one-line idea, the traffic source, and consent; it's stored in our Supabase database, used only to contact the person about the beta, and never sold; anyone can email the contact address to have their data deleted).
 
 # REPO NOTES (added during setup)
 - Run `npm run dev` (http://localhost:4321), `npm run build`, and `npm run check`. `/_components` is a dev-only preview of the conversation components.

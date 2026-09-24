@@ -1,5 +1,5 @@
 // Waitlist signups go into a Supabase table that the public can add rows to
-// but never read (see supabase/migrations/). These values are public by
+// but never read (see supabase/waitlist.sql). These values are public by
 // design: they end up in the page's JavaScript, and the database's
 // row-level security is what keeps the list private.
 export const WAITLIST = {
