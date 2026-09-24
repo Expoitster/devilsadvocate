@@ -50,6 +50,19 @@ export function initWaitlist(): void {
     return value || null;
   };
 
+  // Any "Join the waitlist" link on this page: scroll to the form and put
+  // the cursor in the email field, ready to type.
+  const section = form.closest('section');
+  document.addEventListener('click', (event) => {
+    const link = (event.target as Element).closest<HTMLAnchorElement>('a[href$="#waitlist"]');
+    if (!link || !section || new URL(link.href).pathname !== location.pathname) return;
+    event.preventDefault();
+    const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    section.scrollIntoView({ block: 'start', behavior: smooth ? 'smooth' : 'auto' });
+    history.pushState(null, '', '#waitlist');
+    (form.hidden ? done : email).focus({ preventScroll: true });
+  });
+
   email.addEventListener('input', () => {
     if (email.getAttribute('aria-invalid') === 'true') setInvalid(false);
   });

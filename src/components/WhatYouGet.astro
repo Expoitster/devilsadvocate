@@ -44,14 +44,12 @@ import { SECTIONS } from '../config';
     position: relative;
     padding-left: 1.5rem;
   }
+  /* A real en dash, so every bullet renders at the same weight. */
   .get__list li::before {
-    content: '';
+    content: '–';
     position: absolute;
-    left: 0.25rem;
-    top: 0.78em;
-    width: 0.625rem;
-    height: 1.5px;
-    background: var(--ink-muted);
+    left: 0.125rem;
+    color: var(--ink-muted);
   }
 
   /* The product gets the last word, in its own voice. */

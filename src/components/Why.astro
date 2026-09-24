@@ -7,9 +7,9 @@ import { SECTIONS } from '../config';
     <h2 id="why-heading" class="split__head">The people who love you are terrible at this.</h2>
 
     <div class="split__body">
-      <!-- Everyone else's opinion, one per line and in a muted voice: none
-           of them get a speech mark, because none of them bring sources. -->
-      <p class="why__voices">
+      {/* Everyone else's opinion, one per line and muted: none
+           of them get a speech mark, because none of them bring sources. */}
+      <p class="why__others">
         <span>Your friends say it’s genius.</span>
         <span>Your parents say be careful.</span>
         <span>LinkedIn says quit your job.</span>
@@ -26,7 +26,7 @@ import { SECTIONS } from '../config';
 </section>
 
 <style>
-  .why__voices {
+  .why__others {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;

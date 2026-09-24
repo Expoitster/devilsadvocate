@@ -35,6 +35,7 @@ export const SECTIONS = {
   bring: 'what-you-can-bring',
   howItWorks: 'how-it-works',
   whatYouGet: 'what-you-get',
+  pricing: 'pricing',
   refuse: 'what-we-wont-do',
   faq: 'faq',
   waitlist: 'waitlist',
@@ -46,5 +47,6 @@ export const sectionHref = (id: string) => path(`/#${id}`);
 export const NAV_LINKS = [
   { label: 'How it works', href: sectionHref(SECTIONS.howItWorks) },
   { label: 'What you get', href: sectionHref(SECTIONS.whatYouGet) },
+  { label: 'Pricing', href: sectionHref(SECTIONS.pricing) },
   { label: 'FAQ', href: sectionHref(SECTIONS.faq) },
 ];

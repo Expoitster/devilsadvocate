@@ -3,7 +3,7 @@ import type { HTMLAttributes } from 'astro/types';
 
 /**
  * The product's voice: Fraunces, indented, raspberry speech mark.
- * Pass `speaker={false}` where the context already says who is talking.
+ * Pass `speaker={false}` where the context already says whose line it is.
  */
 interface Props extends Omit<HTMLAttributes<'div'>, 'class'> {
   /** Use `span` inside phrasing-only parents such as <summary>. */

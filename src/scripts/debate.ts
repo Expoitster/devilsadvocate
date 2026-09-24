@@ -1,6 +1,6 @@
 /**
- * Plays the hero debate once: a voice note that turns into text, then each
- * reply after a short typing pause. It's a scripted illustration: every
+ * Plays the hero debate once: the user's message types itself out behind a
+ * blinking cursor, then each reply follows after a short typing pause. It's a scripted illustration: every
  * line is already in the markup, and this only reveals them in order.
  *
  * The inline script in Hero.astro arms the debate (data-state) before first
@@ -8,13 +8,16 @@
  * nothing and the finished conversation stays as it is.
  */
 
-const VOICE_MS = 1500; // waveform before it turns into text
-const AFTER_VOICE_MS = 700; // transcript lands, then the first reply starts typing
+const CARET_MS = 500; // cursor blinks on its own before the first keystroke
+const CHAR_MS = 32; // per character typed
+const PUNCTUATION_MS = 140; // extra pause after , . ? !
+const BEFORE_SEND_MS = 450; // finished typing, cursor still blinking
+const AFTER_SEND_MS = 600; // message sent, then the first reply starts typing
 const TYPING_MS = 800; // typing pause before each reply
 const READ_MS = [1400, 1900, 0]; // reading time after each reply
 const START_DELAY_MS = 350;
 
-type Step = 'hidden' | 'voice' | 'typing' | 'shown';
+type Step = 'hidden' | 'composing' | 'typing' | 'shown';
 
 function wait(ms: number, signal: AbortSignal): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -31,6 +34,31 @@ function wait(ms: number, signal: AbortSignal): Promise<void> {
   });
 }
 
+/**
+ * Splits a paragraph into one span per character for the type-out effect.
+ * The visible copy is aria-hidden; screen readers get the sentence whole.
+ * Returns the spans, led by an empty one that holds the cursor before the
+ * first character.
+ */
+function splitForTyping(p: HTMLElement): HTMLElement[] {
+  const text = (p.textContent ?? '').replace(/\s+/g, ' ').trim();
+  const whole = document.createElement('span');
+  whole.className = 'sr-only-text';
+  whole.textContent = text;
+  const visual = document.createElement('span');
+  visual.setAttribute('aria-hidden', 'true');
+  const chars: HTMLElement[] = [];
+  for (const ch of ['', ...text]) {
+    const span = document.createElement('span');
+    span.className = 'typed__char';
+    span.textContent = ch;
+    visual.append(span);
+    chars.push(span);
+  }
+  p.replaceChildren(whole, visual);
+  return chars;
+}
+
 export function initDebate(): void {
   const root = document.querySelector<HTMLElement>('[data-debate]');
   if (!root || !root.hasAttribute('data-state')) return;
@@ -42,7 +70,26 @@ export function initDebate(): void {
   if (!user || !replay) return;
 
   const set = (el: HTMLElement, step: Step) => el.setAttribute('data-step', step);
+  const message = user.querySelector<HTMLElement>('[data-type-out]');
+  const chars = message ? splitForTyping(message) : [];
   let controller: AbortController | null = null;
+
+  const moveCaret = (to: HTMLElement | null) => {
+    chars.forEach((c) => c.classList.toggle('is-caret', c === to));
+  };
+
+  async function typeOut(signal: AbortSignal): Promise<void> {
+    chars.forEach((c) => c.classList.remove('is-typed'));
+    moveCaret(chars[0] ?? null);
+    await wait(CARET_MS, signal);
+    for (const c of chars.slice(1)) {
+      c.classList.add('is-typed');
+      moveCaret(c);
+      await wait(CHAR_MS + (/[,.?!]/.test(c.textContent ?? '') ? PUNCTUATION_MS : 0), signal);
+    }
+    await wait(BEFORE_SEND_MS, signal);
+    moveCaret(null);
+  }
 
   async function play(): Promise<void> {
     controller?.abort();
@@ -55,10 +102,10 @@ export function initDebate(): void {
 
     try {
       await wait(START_DELAY_MS, signal);
-      set(user!, 'voice');
-      await wait(VOICE_MS, signal);
+      set(user!, 'composing');
+      await typeOut(signal);
       set(user!, 'shown');
-      await wait(AFTER_VOICE_MS, signal);
+      await wait(AFTER_SEND_MS, signal);
 
       for (const [i, reply] of replies.entries()) {
         set(reply, 'typing');
@@ -68,6 +115,7 @@ export function initDebate(): void {
       }
       await wait(500, signal);
     } catch {
+      moveCaret(null);
       return; // replaced by a newer run
     }
 
@@ -95,7 +143,7 @@ export function initDebate(): void {
         void play();
       }
     },
-    // Once its top edge is 80px into view: the voice note is then on screen.
+    // Once its top edge is 80px into view: the user's message is then on screen.
     { rootMargin: '0px 0px -80px 0px' },
   );
   observer.observe(root);

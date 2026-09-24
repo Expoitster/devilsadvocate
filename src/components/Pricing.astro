@@ -1,0 +1,231 @@
+---
+/**
+ * Pricing. Informational only: there is no checkout on this site, and every
+ * plan button leads to the waitlist. Yearly comes first everywhere (source
+ * and screen), so keyboard and screen-reader order match what you see.
+ */
+import ProductLine from './ProductLine.astro';
+import { SECTIONS, WAITLIST_ON, sectionHref } from '../config';
+
+const BENEFITS = [
+  'Both modes: Challenge my idea and Challenge my decision',
+  'All four areas: startup ideas, big life decisions, work proposals, and philosophy and beliefs',
+  'Unlimited debates (fair use)',
+  'Up to 3 clarifying questions before every debate, so we argue with what you actually mean',
+  'The case for you first, then the strongest other side',
+  'Receipts on every counterpoint: real failed startups and real philosophers, every quote checked',
+  'Push back as many rounds as you like, with fresh evidence each time',
+  'A hand-back card after every session: your position, the toughest counterpoints, open questions, and the cheapest test to run',
+  'Saved history, so the next session picks up where the last one ended',
+  'Your sessions stay private; delete them anytime',
+];
+
+// $59 × 12 = $708 a year monthly; $708 − $150 = $558 saved (78.8%, shown
+// as 79%); $150 ÷ 12 = $12.50 a month.
+const PLANS = [
+  {
+    id: 'yearly',
+    name: 'Yearly',
+    amount: '$150',
+    per: 'year',
+    savings: { lead: 'That’s $12.50 a month.', rest: 'You save $558 a year (79%) compared with paying monthly.' },
+    line: 'For people who make decisions for a living. Or just a lot of them.',
+    featured: true,
+  },
+  {
+    id: 'monthly',
+    name: 'Monthly',
+    amount: '$59',
+    per: 'month',
+    savings: null,
+    line: 'For when you’ve got a big call coming up.',
+    featured: false,
+  },
+];
+---
+
+<section id={SECTIONS.pricing} aria-labelledby="pricing-heading" class="section container-page">
+  <h2 id="pricing-heading" class="max-w-[22ch]">Pricing (yes, we argued about this too)</h2>
+  <ProductLine class="pricing__sub">
+    Cheaper than one bad decision. Prices apply from launch on <time datetime="2026-12-01">December 1, 2026</time>.
+  </ProductLine>
+
+  <div class="plans">
+    {
+      PLANS.map((plan) => (
+        <article class:list={['plan', { 'plan--featured': plan.featured }]} aria-labelledby={`plan-${plan.id}`}>
+          <h3 id={`plan-${plan.id}`} class="plan__name">
+            {plan.name}
+          </h3>
+          <p class="plan__price">
+            <span class="plan__amount">{plan.amount}</span>
+            <span class="plan__per" aria-hidden="true">
+              / {plan.per}
+            </span>
+            <span class="sr-only-text"> per {plan.per}</span>
+          </p>
+          <p class="plan__savings">
+            {plan.savings && (
+              <>
+                <strong>{plan.savings.lead}</strong> {plan.savings.rest}
+              </>
+            )}
+          </p>
+          <p class="plan__line">{plan.line}</p>
+          <div class="plan__cta">
+            {WAITLIST_ON && (
+              <a href={sectionHref(SECTIONS.waitlist)} class={plan.featured ? 'btn-primary' : 'btn-secondary'}>
+                Join the waitlist
+              </a>
+            )}
+          </div>
+          <ul class="plan__benefits" role="list" aria-label={`Included in ${plan.name}`}>
+            {BENEFITS.map((b) => (
+              <li>{b}</li>
+            ))}
+          </ul>
+        </article>
+      ))
+    }
+  </div>
+
+  <div class="pricing__fine">
+    <p>Payments are processed securely by Dodo Payments.</p>
+    {
+      WAITLIST_ON && (
+        <p>Joining the waitlist is free and commits you to nothing. We’ll email you before billing starts.</p>
+      )
+    }
+    <p>Fair use: unlimited means normal human use, not a bot arguing with our bot.</p>
+  </div>
+</section>
+
+<style>
+  .pricing__sub {
+    margin-top: 1.5rem;
+  }
+
+  .plans {
+    display: grid;
+    gap: 1.25rem;
+    max-width: 60rem;
+    margin-top: 2.5rem;
+  }
+
+  .plan {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1.25rem, 0.9rem + 1.5vw, 2rem);
+    border: 1px solid var(--rule);
+    border-radius: 0.875rem;
+    background: var(--surface);
+  }
+
+  /* The one highlight: a raspberry border (and button). No ribbon, no badge,
+     no shadow. */
+  .plan--featured {
+    border: 2px solid var(--devil);
+  }
+
+  .plan__name {
+    font-size: var(--step-1);
+    font-weight: 560;
+  }
+
+  .plan__price {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 0.5rem;
+    margin-top: 0.75rem;
+  }
+  .plan__amount {
+    font-family: var(--font-product);
+    font-size: var(--step-4);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: lining-nums;
+  }
+  .plan__per {
+    font-size: var(--step-0);
+    color: var(--ink-muted);
+  }
+
+  /* The savings sit right under the price, as a label, not a badge. */
+  .plan__savings {
+    margin-top: 0.75rem;
+    font-size: 0.9375rem;
+    line-height: 1.45;
+    color: var(--devil);
+  }
+  .plan__savings strong {
+    font-weight: 700;
+  }
+  .plan__savings:empty {
+    display: none;
+  }
+
+  .plan__line {
+    margin-top: 1rem;
+  }
+
+  .plan__cta {
+    margin-top: 1.5rem;
+  }
+  .plan__cta:empty {
+    display: none;
+  }
+
+  .plan__benefits {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.9375rem;
+    line-height: 1.45;
+  }
+  .plan__benefits li {
+    position: relative;
+    padding-left: 1.25rem;
+  }
+  /* A real en dash, so every bullet renders at the same weight. */
+  .plan__benefits li::before {
+    content: '–';
+    position: absolute;
+    left: 0;
+    color: var(--ink-muted);
+  }
+
+  .pricing__fine {
+    display: grid;
+    gap: 0.375rem;
+    max-width: var(--measure);
+    margin-top: 2rem;
+    font-size: var(--step--1);
+    color: var(--ink-muted);
+  }
+
+  /* Side by side from tablet up. Subgrid lines the two cards' rows up, so
+     the prices, lines, buttons, and lists start at the same heights. */
+  @media (min-width: 48rem) {
+    .plans {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: repeat(6, auto);
+      column-gap: 1.5rem;
+      row-gap: 0;
+    }
+    .plan {
+      display: grid;
+      grid-row: span 6;
+      grid-template-rows: subgrid;
+      align-content: start;
+    }
+    .plan__savings:empty,
+    .plan__cta:empty {
+      display: block;
+      margin: 0;
+    }
+  }
+</style>

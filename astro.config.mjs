@@ -16,7 +16,7 @@ const SITE_URL =
 // site. The Pages workflow sets this; Vercel and Netlify serve from /.
 const BASE_PATH = process.env.BASE_PATH || '/';
 
-// A dev-only page that shows every voice component side by side. It is
+// A dev-only page that shows every conversation component side by side. It is
 // injected only under `astro dev`, so it never ships in the static build.
 /** @type {import('astro').AstroIntegration} */
 const devComponentsPage = {

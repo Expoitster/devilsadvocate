@@ -40,19 +40,11 @@ const label = `Mockup of step ${step}, ${STEPS[step - 1]!.title.replace(/\.$/, '
       )
     }
 
-    {
-      step === 2 && (
-        <>
-          <p class="ui-label">Transcript</p>
-          <UserLine size="sm">{ex.transcript}</UserLine>
-        </>
-      )
-    }
 
     {
       step === 3 && (
         <>
-          <UserLine size="sm">{ex.transcript}</UserLine>
+          <UserLine size="sm">{ex.opening}</UserLine>
           {ex.questions.map((q) => (
             <ProductLine size="sm">{q}</ProductLine>
           ))}
@@ -63,7 +55,7 @@ const label = `Mockup of step ${step}, ${STEPS[step - 1]!.title.replace(/\.$/, '
     {
       step === 4 && (
         <>
-          <UserLine size="sm">{ex.transcript}</UserLine>
+          <UserLine size="sm">{ex.opening}</UserLine>
           <ProductLine size="sm" bodyAs="div">
             {ex.realQuestion.map((part) => (
               <p>
@@ -112,7 +104,7 @@ const label = `Mockup of step ${step}, ${STEPS[step - 1]!.title.replace(/\.$/, '
           <div class="mini-card__part">
             <p class="ui-label">Your position</p>
             <UserLine size="sm" speaker={false}>
-              {ex.transcript}
+              {ex.opening}
             </UserLine>
           </div>
           <div class="mini-card__part">
@@ -136,12 +128,12 @@ const label = `Mockup of step ${step}, ${STEPS[step - 1]!.title.replace(/\.$/, '
 
     {
       step === 2 && (
-        <div slot="bottom" class="mic" aria-hidden="true">
-          <span class="mic__button">
-            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="9" y="3" width="6" height="11" rx="3" />
-              <path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21" />
-            </svg>
+        <div slot="bottom" class="composer">
+          <p class="composer__text">
+            {ex.opening}<span class="composer__caret" aria-hidden="true" />
+          </p>
+          <span class="composer__send" aria-hidden="true">
+            Send
           </span>
         </div>
       )
@@ -197,20 +189,37 @@ const label = `Mockup of step ${step}, ${STEPS[step - 1]!.title.replace(/\.$/, '
     color: var(--ink);
   }
 
-  /* Step 2: the mic is a picture of a button, not a button. */
-  .mic {
-    display: flex;
-    justify-content: center;
-  }
-  .mic__button {
+  /* Step 2: a picture of a text box with the message typed in. Nothing
+     here is an input or a button. */
+  .composer {
     display: grid;
-    place-items: center;
-    width: 3.75rem;
-    height: 3.75rem;
-    border-radius: 50%;
+    gap: 0.625rem;
+    padding: 0.75rem 0.875rem;
+    border: 1.5px solid var(--you);
+    border-radius: 0.875rem;
+    background: var(--surface);
+  }
+  .composer__text {
+    font-size: 0.9375rem;
+    line-height: 1.45;
+  }
+  .composer__caret {
+    display: inline-block;
+    width: 2px;
+    height: 1.1em;
+    margin-left: 1px;
+    vertical-align: -0.2em;
+    border-radius: 1px;
+    background: var(--you);
+  }
+  .composer__send {
+    justify-self: end;
+    padding: 0.3rem 0.875rem;
+    border-radius: 999px;
     background: var(--you);
     color: var(--surface);
-    box-shadow: 0 0 0 0.5rem color-mix(in srgb, var(--you) 16%, transparent);
+    font-size: 0.875rem;
+    font-weight: 600;
   }
 
   /* Step 5 */

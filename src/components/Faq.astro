@@ -8,8 +8,8 @@ import { SECTIONS, WAITLIST, WAITLIST_ON } from '../config';
   <div class="split">
     <h2 id="faq-heading" class="split__head">FAQ</h2>
 
-    <!-- Native <details>: opens and closes with no JavaScript. Questions are
-         your voice, answers are ours. -->
+    {/* Native <details>: opens and closes with no JavaScript. Questions are
+         the user's lines, answers are ours. */}
     <div class="faq split__body">
       <details class="faq__item" open>
         <summary class="faq__q">
@@ -41,10 +41,10 @@ import { SECTIONS, WAITLIST, WAITLIST_ON } from '../config';
 
       <details class="faq__item">
         <summary class="faq__q">
-          <UserLine as="span" bodyAs="span" speaker={false}>Do I have to talk? I’m shy.</UserLine>
+          <UserLine as="span" bodyAs="span" speaker={false}>Can I talk to it instead of typing?</UserLine>
         </summary>
         <ProductLine speaker={false} class="faq__a">
-          Type if you prefer. The mic is for people who think out loud.
+          Not at launch. It’s text-only for now. Your thumbs will survive.
         </ProductLine>
       </details>
 
@@ -66,6 +66,24 @@ import { SECTIONS, WAITLIST, WAITLIST_ON } from '../config';
             WAITLIST_ON ? ', and the waitlist gets in first.' : '.'
           }
         </ProductLine>
+      </details>
+
+      <details class="faq__item">
+        <summary class="faq__q">
+          <UserLine as="span" bodyAs="span" speaker={false}>How much will it cost?</UserLine>
+        </summary>
+        <ProductLine speaker={false} class="faq__a">
+          $59 a month, or $150 a year if you like saving $558. Prices apply from <time datetime="2026-12-01"
+            >December 1, 2026</time
+          >.
+        </ProductLine>
+      </details>
+
+      <details class="faq__item">
+        <summary class="faq__q">
+          <UserLine as="span" bodyAs="span" speaker={false}>How do I pay?</UserLine>
+        </summary>
+        <ProductLine speaker={false} class="faq__a">Payments are processed securely by Dodo Payments.</ProductLine>
       </details>
 
       {

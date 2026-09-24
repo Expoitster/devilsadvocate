@@ -13,7 +13,7 @@ npm run build      # static output in dist/
 npm run preview    # serve dist/ locally
 ```
 
-While `npm run dev` is running, `/_components` shows every voice component. That page is dev-only and is left out of the build.
+While `npm run dev` is running, `/_components` shows every conversation component. That page is dev-only and is left out of the build.
 
 ## Before launch
 
@@ -27,7 +27,7 @@ The share image (`public/og.png`), touch icon, and `favicon.ico` are pre-rendere
 
 | Path | What it is |
 | --- | --- |
-| `src/styles/global.css` | color tokens (light and dark), type scale, Tailwind theme mapping, voice styles |
+| `src/styles/global.css` | color tokens (light and dark), type scale, Tailwind theme mapping, conversation styles |
 | `src/layouts/Base.astro` | document shell, self-hosted fonts, nav, footer |
 | `src/components/UserLine.astro` | the user's voice: Bricolage, teal mark, flush left |
 | `src/components/ProductLine.astro` | the product's voice: Fraunces, raspberry mark, indented |

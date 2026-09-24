@@ -12,8 +12,8 @@ export const MODE_LABEL: Record<Mode, string> = {
 export const STEPS = [
   { title: 'Pick your fight.', body: 'Choose a mode. That’s it.' },
   {
-    title: 'Talk it out.',
-    body: 'Hit the mic and ramble like you would to a friend. We transcribe it, and you fix anything we misheard. (“No, I said SaaS, not sass.”) Prefer typing? Also fine.',
+    title: 'Spill it.',
+    body: 'Type out your idea or decision like you’d text a friend. Long rants welcome. Typos forgiven.',
   },
   {
     title: 'We ask before we argue.',
@@ -38,8 +38,8 @@ export const STEPS = [
 ] as const;
 
 interface Example {
-  /** Step 2: what the user said, as transcribed. */
-  transcript: string;
+  /** Step 2: the user's opening message, as typed. */
+  opening: string;
   /** Step 3: up to three clarifying questions. */
   questions: string[];
   /** Step 4: the named question, and a bias if one was spotted. */
@@ -58,7 +58,7 @@ interface Example {
 
 export const EXAMPLES: Record<Mode, Example> = {
   idea: {
-    transcript: 'Food delivery for college hostels. Swiggy did it, so there’s clearly demand.',
+    opening: 'Food delivery for college hostels. Swiggy did it, so there’s clearly demand.',
     questions: [
       'Who pays, students or parents?',
       'What happens to orders during vacations?',
@@ -83,7 +83,7 @@ export const EXAMPLES: Record<Mode, Example> = {
     },
   },
   decision: {
-    transcript: 'I’m skipping placements to build my startup full time.',
+    opening: 'I’m skipping placements to build my startup full time.',
     questions: [
       'What would you lose if it fails in 12 months?',
       'Does anyone depend on your income?',

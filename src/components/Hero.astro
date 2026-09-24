@@ -3,9 +3,6 @@ import UserLine from './UserLine.astro';
 import ProductLine from './ProductLine.astro';
 import Receipt from './Receipt.astro';
 import { SECTIONS, WAITLIST_ON } from '../config';
-
-// Bar heights for the voice-note waveform, as a fraction of its height.
-const WAVE = [0.35, 0.6, 0.85, 0.5, 0.95, 0.7, 0.4, 0.8, 1, 0.55, 0.3, 0.65, 0.9, 0.6, 0.45, 0.75, 0.5, 0.85, 0.35, 0.6, 0.4, 0.25];
 ---
 
 <section id={SECTIONS.hero} aria-labelledby="hero-heading" class="hero container-page">
@@ -17,7 +14,7 @@ const WAVE = [0.35, 0.6, 0.85, 0.5, 0.95, 0.7, 0.4, 0.8, 1, 0.55, 0.3, 0.65, 0.9
       </h1>
 
       <p class="hero__subhead">
-        Talk through your startup idea or big decision. Devils Advocate asks the awkward questions, brings receipts from
+        Type out your startup idea or big decision. Devils Advocate asks the awkward questions, brings receipts from
         failed startups and 2,000 years of philosophy, then hands the decision back to you. You’re the boss. We just read
         the fine print.
       </p>
@@ -48,23 +45,15 @@ const WAVE = [0.35, 0.6, 0.85, 0.5, 0.95, 0.7, 0.4, 0.8, 1, 0.55, 0.3, 0.65, 0.9
       </p>
     </div>
 
-    <!--
+    {/*
       The debate is a scripted illustration. Its markup is the finished
       conversation, which is what shows with JavaScript off or with reduced
       motion. debate.ts hides the turns and plays them in once.
-    -->
+    */}
     <figure class="debate" data-debate aria-labelledby="debate-caption" tabindex="-1">
       <div class="debate__turns">
         <UserLine size="lg" bodyAs="div" class="turn turn--user" data-turn>
-          <div class="voice-note" aria-hidden="true">
-            <svg class="voice-note__play" viewBox="0 0 12 14" width="12" height="14"><path d="M1 1.2v11.6a.6.6 0 0 0 .9.5l9.6-5.8a.6.6 0 0 0 0-1L1.9.7a.6.6 0 0 0-.9.5z" fill="currentColor"></path></svg>
-            <span class="voice-note__wave">
-              {WAVE.map((h, i) => <span style={`--h:${h};--i:${i}`} />)}
-            </span>
-            <span class="voice-note__time">0:06</span>
-          </div>
-          <p class="turn__text">I’m building food delivery for college hostels. Swiggy made it, so will I.</p>
-          <p class="turn__meta">Transcribed from a voice note</p>
+          <p class="turn__text" data-type-out>I’m building food delivery for college hostels. Swiggy made it, so will I.</p>
         </UserLine>
 
         <ProductLine size="lg" bodyAs="div" class="turn turn--product" data-turn>
@@ -192,7 +181,7 @@ const WAVE = [0.35, 0.6, 0.85, 0.5, 0.95, 0.7, 0.4, 0.8, 1, 0.55, 0.3, 0.65, 0.9
     outline: none;
   }
 
-  /* On desktop the debate reads like a transcript in the margin. */
+  /* On desktop the debate reads like a chat log in the margin. */
   @media (min-width: 64rem) {
     .debate {
       padding-top: 0.5rem;
@@ -230,13 +219,6 @@ const WAVE = [0.35, 0.6, 0.85, 0.5, 0.95, 0.7, 0.4, 0.8, 1, 0.55, 0.3, 0.65, 0.9
     position: relative;
   }
 
-  .turn__meta {
-    margin-top: 0.375rem;
-    font-size: var(--step--1);
-    font-weight: 400;
-    color: var(--ink-muted);
-  }
-
   .turn__receipt {
     margin-top: 0.625rem;
   }
@@ -263,9 +245,8 @@ const WAVE = [0.35, 0.6, 0.85, 0.5, 0.95, 0.7, 0.4, 0.8, 1, 0.55, 0.3, 0.65, 0.9
     cursor: pointer;
   }
 
-  /* The voice note and the typing dots exist only while the animation
-     runs. In the finished (default) state they are not shown at all. */
-  .voice-note,
+  /* The typing dots exist only while the animation runs. In the finished
+     (default) state they are not shown at all. */
   .typing {
     display: none;
   }
@@ -286,75 +267,40 @@ const WAVE = [0.35, 0.6, 0.85, 0.5, 0.95, 0.7, 0.4, 0.8, 1, 0.55, 0.3, 0.65, 0.9
 
   /* Hidden parts still take up their space, so nothing below jumps. */
   .debate[data-state] .turn__text,
-  .debate[data-state] .turn__meta,
   .debate[data-state] .turn__receipt {
     transition: opacity 320ms ease-out;
   }
-  .debate[data-state] .turn:not([data-step='shown']) :is(.turn__text, .turn__meta, .turn__receipt) {
+  .debate[data-state] .turn:not([data-step='shown']):not([data-step='composing']) :is(.turn__text, .turn__receipt) {
     opacity: 0;
   }
 
-  /* 1. The voice note, over the space its transcript will fill. */
-  .voice-note {
+  /* 1. The user's message types itself out behind a blinking cursor.
+        debate.ts splits it into per-character spans; characters not yet
+        typed are invisible but keep their space, so lines never re-wrap. */
+  .typed__char {
+    position: relative;
+  }
+  .debate[data-state] .turn--user:not([data-step='shown']) .typed__char:not(.is-typed) {
+    visibility: hidden;
+  }
+  .typed__char.is-caret::after {
+    content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    align-items: center;
-    gap: 0.625rem;
-    height: 2.75rem;
-    padding: 0 1rem 0 0.875rem;
-    border-radius: 1.375rem;
-    background: color-mix(in srgb, var(--you) 13%, var(--surface));
-    color: var(--you);
-    transition: opacity 240ms ease-out, transform 240ms ease-out;
-    transform-origin: left center;
+    top: 0.12em;
+    right: -0.09em;
+    width: 2px;
+    height: 1.1em;
+    border-radius: 1px;
+    background: var(--you);
+    animation: caret 1s steps(1) infinite;
   }
-  .debate[data-state] .turn--user .voice-note {
-    display: flex;
-    opacity: 0;
-  }
-  .debate[data-state] .turn--user[data-step='voice'] .voice-note {
-    opacity: 1;
-  }
-  .debate[data-state] .turn--user[data-step='shown'] .voice-note {
-    opacity: 0;
-    transform: scaleX(0.6);
-  }
-
-  .voice-note__wave {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    height: 1.375rem;
-  }
-  .voice-note__wave span {
-    width: 3px;
-    height: calc(var(--h) * 100%);
-    border-radius: 2px;
-    background: currentColor;
-    transform-origin: center;
-  }
-  .turn--user[data-step='voice'] .voice-note__wave span {
-    animation: wave 620ms ease-in-out infinite alternate;
-    animation-delay: calc(var(--i) * -71ms);
-  }
-  @keyframes wave {
-    from {
-      transform: scaleY(0.35);
-    }
-    to {
-      transform: scaleY(1);
+  @keyframes caret {
+    50% {
+      opacity: 0;
     }
   }
 
-  .voice-note__time {
-    font-size: 0.875rem;
-    font-weight: 500;
-    font-variant-numeric: tabular-nums;
-    color: var(--ink);
-  }
-
-  /* 2. Typing: the speech mark arrives first, then the words. */
+  /* 2. Replies: the speech mark arrives first with typing dots, then the words. */
   .typing {
     position: absolute;
     top: 0.55em;

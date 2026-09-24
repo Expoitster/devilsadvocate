@@ -3,15 +3,18 @@ You are building a STATIC marketing website for a product that is coming soon. T
 Waitlist storage (September 23, 2026): signups go into a Supabase table (`public.waitlist`, see `supabase/migrations/`). The browser writes to it directly with the public anon/publishable key; row-level security lets the public insert and nothing else, so the list is readable only from the Supabase dashboard. Never put a service-role key in the site. The waitlist (form, buttons, FAQ answer, privacy page) is built only when `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`, and `PUBLIC_CONTACT_EMAIL` are all set (`WAITLIST_ON` in `src/config.ts`).
 
 Hard scope rules:
-- Static site only: no backend of our own, no API routes, no login, no pricing. The only database is the insert-only Supabase waitlist table.
-- Do NOT build any product functionality. No working chatbot, no working microphone, no transcription. Any product screens shown on the page are illustrative mockups made of HTML and CSS.
-- The only interactive pieces allowed: the hero animation, the "How it works" step-through, FAQ toggles, and the waitlist form (which writes to the Supabase waitlist table).
+- Static site only: no backend of our own, no API routes, no login, no checkout, no payment code. The only database is the insert-only Supabase waitlist table.
+- Pricing is shown in USD; the site has no checkout, and every pricing button leads to the waitlist.
+- Do NOT build any product functionality. No working chatbot. Any product screens shown on the page are illustrative mockups made of HTML and CSS.
+- The only interactive pieces allowed: the hero animation, the "How it works" step-through, the mobile menu, FAQ toggles, and the waitlist form (which writes to the Supabase waitlist table).
 
 The site copy lives in `docs/copy.md` (the COPY section below, kept in sync).
 
 # PRODUCT (for context; the site describes it, it does not build it)
 Name: Devils Advocate
-One-liner: A coming-soon chatbot you talk to (voice or text) that challenges your startup idea or big life decision with real evidence, then hands the decision back to you.
+One-liner: A coming-soon chatbot you type to that challenges your startup idea or big life decision with real evidence, then hands the decision back to you.
+
+The product is TEXT-ONLY at launch: you type, it types back. Don't describe or show any other way of using it.
 
 How the product will behave (describe this on the site):
 - It asks up to 3 clarifying questions before it argues.
@@ -23,7 +26,7 @@ Two modes:
 - Challenge my idea: startup ideas and work proposals. Main lens: survivorship bias.
 - Challenge my decision: big life decisions and philosophy and beliefs. Evidence comes from what great thinkers argued, on both sides, with book and chapter.
 
-Audience: MBA students, first-time founders, and young professionals in India. Smart, busy, allergic to fluff, and on their phones. Design mobile-first.
+Audience: MBA students, first-time founders, and young professionals in India, plus founders and professionals outside India. Smart, busy, allergic to fluff, and on their phones. Design mobile-first.
 
 Launch status: private beta opens December 1, 2026. Waitlist members get in first.
 
@@ -32,11 +35,12 @@ Humorous, straightforward, warm. Think: the funny, sharp friend who asks "wait, 
 
 Rules:
 - Never invent social proof: no fake testimonials, no fake user counts, no "trusted by" logos.
-- No pricing and no "free" claims.
+- Pricing is shown in USD; the site has no checkout, and every pricing button leads to the waitlist.
+- No "free" claims about the product. (Joining the waitlist is free, and the pricing section says so.)
 - Sentence case everywhere. Buttons say exactly what happens ("Join the waitlist").
 
 # DESIGN LANGUAGE: "Two voices on one page"
-Concept: the page itself is a conversation between the reader and the devil's advocate. Every visual choice encodes WHO is speaking.
+Concept: the page itself is a conversation between the reader and the devil's advocate. Every visual choice encodes whose line it is.
 
 Typography, two families from Google Fonts (self-hosted via @fontsource or loaded with preconnect):
 - Fraunces is the product's voice: headlines and anything Devils Advocate "says." Use its optical sizing.
@@ -86,17 +90,17 @@ Quality floor: responsive from 360px up, visible keyboard focus, WCAG AA contras
 # COPY (use it; you may tighten wording, but keep the tone and the facts)
 
 ## Nav
-Logo: Devils Advocate (Fraunces). Links: How it works, What you get, FAQ. Button: Join the waitlist.
+Logo: Devils Advocate (Fraunces). Links: How it works, What you get, Pricing, FAQ. Button: Join the waitlist.
 
 ## Hero
 Headline: Your idea sounds great. That's what worries us.
-Subhead: Talk through your startup idea or big decision. Devils Advocate asks the awkward questions, brings receipts from failed startups and 2,000 years of philosophy, then hands the decision back to you. You're the boss. We just read the fine print.
+Subhead: Type out your startup idea or big decision. Devils Advocate asks the awkward questions, brings receipts from failed startups and 2,000 years of philosophy, then hands the decision back to you. You're the boss. We just read the fine print.
 Primary button: Join the waitlist
 Secondary link: See how it works
 Small print: Private beta opens December 1, 2026. No spam. We save the arguing for the product.
 
 Hero debate animation script (an illustration; plays once):
-1. USER (voice-note bubble with an animated waveform, which then turns into text): "I'm building food delivery for college hostels. Swiggy made it, so will I."
+1. USER (a typed message that appears with a blinking text cursor): "I'm building food delivery for college hostels. Swiggy made it, so will I."
 2. Devils Advocate: "Love the confidence. Quick question first: who's paying? The students, or their parents' UPI?"
 3. Devils Advocate: "Also, Swiggy is one survivor. We found three hostel-delivery startups that didn't make it. Want to meet them?" plus a receipt chip: "3 similar startups, why they shut down, sources linked"
 4. Devils Advocate: "Your call. Always."
@@ -122,7 +126,7 @@ Heading: Here's exactly what will happen when you show up
 Toggle above the steps: Challenge my idea / Challenge my decision (changes the example shown in each step)
 
 1. Pick your fight. Choose a mode. That's it.
-2. Talk it out. Hit the mic and ramble like you would to a friend. We transcribe it, and you fix anything we misheard. ("No, I said SaaS, not sass.") Prefer typing? Also fine.
+2. Spill it. Type out your idea or decision like you'd text a friend. Long rants welcome. Typos forgiven.
 3. We ask before we argue. Up to three questions, so we argue with what you actually mean, not what we assumed.
 4. We name the real question. Under "should I quit?" there's usually something bigger, like "is security worth a regret?" Or a sneaky bias, like survivorship.
 5. Receipts, both sides. First, what's genuinely strong in your case. Then the strongest other side: real failed startups, or real philosophers, every claim cited. No made-up quotes. We check.
@@ -131,7 +135,7 @@ Toggle above the steps: Challenge my idea / Challenge my decision (changes the e
 
 Example content per step (shown inside a static phone-screen mockup):
 IDEA MODE (hostel food delivery):
-- Step 2 user line: "Food delivery for college hostels. Swiggy did it, so there's clearly demand."
+- Step 2 user line (shown typed into a text box): "Food delivery for college hostels. Swiggy did it, so there's clearly demand."
 - Step 3 questions: "Who pays, students or parents?" / "What happens to orders during vacations?" / "Why won't hostels just call the local dhaba?"
 - Step 4: "The real question: does demand survive 3 months of holidays a year? Bias spotted: survivorship. You're looking at Swiggy, not the graveyard."
 - Step 5 case for you: "Captive audience, dense delivery routes, cheap marketing through hostel groups." Other side, labeled "Illustrative examples for this demo": HostelBites (2017–2019) couldn't cover delivery costs on small orders; CampusCart (2018–2020) saw orders collapse every vacation; MessMate (2016–2018) lost to the hostel's own mess contract.
@@ -154,6 +158,44 @@ Body: Every session ends with one card that's yours to keep:
 Line under it: No verdict. We don't do verdicts. We do homework.
 Show a designed static mock of the card, using the idea-mode example.
 
+## Pricing (after What you get, before What we won't do; section id #pricing)
+Heading: Pricing (yes, we argued about this too)
+Subhead (as a ProductLine): Cheaper than one bad decision. Prices apply from launch on December 1, 2026.
+
+Yearly plan card (the highlighted one; first on mobile):
+- Name: Yearly
+- Price: $150 / year
+- Savings line: That's $12.50 a month. You save $558 a year (79%) compared with paying monthly.
+- Line: For people who make decisions for a living. Or just a lot of them.
+- Button: Join the waitlist
+
+Monthly plan card:
+- Name: Monthly
+- Price: $59 / month
+- Line: For when you've got a big call coming up.
+- Button: Join the waitlist
+
+Benefits (the same list on both cards):
+- Both modes: Challenge my idea and Challenge my decision
+- All four areas: startup ideas, big life decisions, work proposals, and philosophy and beliefs
+- Unlimited debates (fair use)
+- Up to 3 clarifying questions before every debate, so we argue with what you actually mean
+- The case for you first, then the strongest other side
+- Receipts on every counterpoint: real failed startups and real philosophers, every quote checked
+- Push back as many rounds as you like, with fresh evidence each time
+- A hand-back card after every session: your position, the toughest counterpoints, open questions, and the cheapest test to run
+- Saved history, so the next session picks up where the last one ended
+- Your sessions stay private; delete them anytime
+
+Under the cards (small print):
+- Payments are processed securely by Dodo Payments.
+- Joining the waitlist is free and commits you to nothing. We'll email you before billing starts.
+- Fair use: unlimited means normal human use, not a bot arguing with our bot.
+
+Math (keep it true if prices change): $59 × 12 = $708; $708 − $150 = $558 saved (79%); $150 ÷ 12 = $12.50 a month.
+
+Design: two plans only, side by side on desktop, stacked on mobile with yearly first. The yearly card is highlighted with --devil on its border and button; savings sit as a short label under the price, not a corner badge. No identical shadowed cards, no gradient, no "Most popular" ribbon. Prices are large, in Fraunces. Both buttons scroll to #waitlist and focus the email field.
+
 ## What we won't do
 Heading: Things we refuse to do
 - Tell you what to do. We're a devil's advocate, not your dad.
@@ -166,9 +208,11 @@ Heading: Things we refuse to do
 - Isn't this just ChatGPT with an attitude? / Most chatbots are trained to be agreeable. We're built to find the other side, and we bring receipts: a curated database of failed startups and the actual texts of philosophers, with every quote checked.
 - Does it just disagree with everything? / No. It tells you what's strong first, then the strongest other side. Then it steps aside.
 - What if I'm actually right? / Then you walk away more sure, with the counterarguments already handled. That's a win.
-- Do I have to talk? I'm shy. / Type if you prefer. The mic is for people who think out loud.
+- Can I talk to it instead of typing? / Not at launch. It's text-only for now. Your thumbs will survive.
 - Who is it for? / MBA students, first-time founders, and anyone about to make a call they'd hate to get wrong.
 - Can I use it right now? / Not yet. Private beta opens December 1, 2026, and the waitlist gets in first.
+- How much will it cost? / $59 a month, or $150 a year if you like saving $558. Prices apply from December 1, 2026.
+- How do I pay? / Payments are processed securely by Dodo Payments.
 - What do you do with my waitlist details? / We use them only to invite you to the beta. Email the contact address (PUBLIC_CONTACT_EMAIL) and we'll delete them.
 
 ## Waitlist (final section)
@@ -190,8 +234,8 @@ Built by Avinash G, an MBA student who heard "great idea" one too many times.
 Links: Privacy (a short static page: we collect your email and waitlist answers only to invite you to the beta; they are stored in our database, hosted by Supabase; email the contact address to have them deleted).
 
 # REPO NOTES (added during setup)
-- Run `npm run dev` (http://localhost:4321), `npm run build`, and `npm run check`. `/_components` is a dev-only preview of the voice components.
-- Tokens, type scale, and voice styles live in `src/styles/global.css`. Tailwind's default palette is cleared, so only the token colors exist as utilities (`bg-paper`, `text-devil`, `text-step-1`, `text-display`, ...).
+- Run `npm run dev` (http://localhost:4321), `npm run build`, and `npm run check`. `/_components` is a dev-only preview of the conversation components.
+- Tokens, type scale, and conversation styles live in `src/styles/global.css`. Tailwind's default palette is cleared, so only the token colors exist as utilities (`bg-paper`, `text-devil`, `text-step-1`, `text-display`, ...).
 - Use `UserLine`, `ProductLine`, `Receipt`, and `PhoneFrame` from `src/components/` for anything conversational. Don't restyle speech marks per section.
 - Section ids and nav links live in `src/config.ts`. Use `path()` / `sectionHref()` from there for links: the site is served from a sub-path on GitHub Pages.
 - Waitlist settings (`PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`, `PUBLIC_CONTACT_EMAIL`) are GitHub Actions variables, passed to the build by the Pages workflow.
