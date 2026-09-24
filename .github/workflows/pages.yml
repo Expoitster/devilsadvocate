@@ -40,12 +40,15 @@ jobs:
         env:
           SITE_URL: ${{ steps.pages.outputs.origin }}
           BASE_PATH: ${{ steps.pages.outputs.base_path }}
-          # Waitlist settings: Settings > Secrets and variables > Actions >
-          # Variables. These are public values (they end up in the page).
-          # Until all three are set, the site builds without the waitlist.
-          PUBLIC_SUPABASE_URL: ${{ vars.PUBLIC_SUPABASE_URL }}
-          PUBLIC_SUPABASE_ANON_KEY: ${{ vars.PUBLIC_SUPABASE_ANON_KEY }}
-          PUBLIC_CONTACT_EMAIL: ${{ vars.PUBLIC_CONTACT_EMAIL }}
+          # Waitlist settings. All three are public by design: the URL and the
+          # publishable key end up in the page's JavaScript (row-level security
+          # is what protects the table), and the email is shown on /privacy.
+          # A repository variable of the same name (Settings > Secrets and
+          # variables > Actions > Variables) overrides the default here.
+          # Never put a service_role / secret key in this file.
+          PUBLIC_SUPABASE_URL: ${{ vars.PUBLIC_SUPABASE_URL || 'https://wrkvjmsxkfvsjkfaycam.supabase.co' }}
+          PUBLIC_SUPABASE_ANON_KEY: ${{ vars.PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_IPX7IS0lvLxVTEm04CQ65Q_F72-Oquw' }}
+          PUBLIC_CONTACT_EMAIL: ${{ vars.PUBLIC_CONTACT_EMAIL || 'avinashdev.garudapalli2027@mastersunion.org' }}
 
       - uses: actions/upload-pages-artifact@v5
         with:

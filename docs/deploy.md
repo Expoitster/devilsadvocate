@@ -35,11 +35,12 @@ Supabase dashboard.
    - the **Project URL** (`https://<ref>.supabase.co`);
    - the **anon** or **publishable** key. Never use the `service_role` /
      secret key: it bypasses the protections.
-3. **Add three repository variables** in GitHub: **Settings > Secrets and
-   variables > Actions > Variables > New repository variable**:
-   `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`,
-   `PUBLIC_CONTACT_EMAIL` (shown in the FAQ and on `/privacy/` for deletion
-   requests).
+3. **Set the three values.** They're already defaults in
+   `.github/workflows/pages.yml`: `PUBLIC_SUPABASE_URL`,
+   `PUBLIC_SUPABASE_ANON_KEY`, and `PUBLIC_CONTACT_EMAIL` (shown in the FAQ
+   and on `/privacy/` for deletion requests). To change one without editing
+   the file, add a repository variable with the same name: **Settings >
+   Secrets and variables > Actions > Variables**.
 4. **Redeploy:** **Actions > Deploy to GitHub Pages > Run workflow**. The
    waitlist section, its buttons, and the privacy page appear.
 5. **See signups:** Supabase **Table Editor > waitlist**. Use **Export >
