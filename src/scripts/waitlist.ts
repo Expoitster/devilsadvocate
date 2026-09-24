@@ -59,9 +59,25 @@ export function initWaitlist(): void {
     message.hidden = true;
   };
 
+  /** Show the thank-you. For a new signup it's personal: their name, and
+      their idea echoed back (or a line for what they said they'd bring).
+      Everything is set as text, never HTML. */
   const finish = (already = false) => {
-    done.querySelector<HTMLElement>('[data-done-joined]')!.hidden = already;
-    done.querySelector<HTMLElement>('[data-done-already]')!.hidden = !already;
+    const q = <T extends HTMLElement>(sel: string) => done.querySelector<T>(sel)!;
+    q('[data-done-joined]').hidden = already;
+    q('[data-done-already]').hidden = !already;
+    if (!already) {
+      const data = new FormData(form);
+      const name = String(data.get('first_name') ?? '').trim().slice(0, LIMITS.first_name);
+      const idea = String(data.get('first_challenge') ?? '').trim().slice(0, LIMITS.first_challenge);
+      const interest = String(data.getAll('interests')[0] ?? '');
+      q('[data-thanks-name]').textContent = name ? `, ${name}` : '';
+      q('[data-thanks-idea-text]').textContent = idea;
+      q('[data-thanks-idea]').hidden = !idea;
+      done.querySelectorAll<HTMLElement>('[data-thanks-interest]').forEach((line) => {
+        line.hidden = Boolean(idea) || line.dataset.thanksInterest !== interest;
+      });
+    }
     form.hidden = true;
     done.hidden = false;
     done.focus();

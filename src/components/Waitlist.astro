@@ -7,10 +7,20 @@
  * sent for role and interests are the labels, as the table's checks expect.
  */
 import ProductLine from './ProductLine.astro';
+import UserLine from './UserLine.astro';
 import { SECTIONS, path } from '../config';
 
 const ROLES = ['MBA student', 'First-time founder', 'Working professional', 'Just curious'];
 const INTERESTS = ['A startup idea', 'A life decision', 'A work proposal', 'A belief I want to test'];
+
+// After joining without typing an idea: one line for the first thing they
+// said they'd bring.
+const INTEREST_REPLIES = [
+  { interest: 'A startup idea', line: 'Bring the startup idea. We’re already dusting off the graveyard files.' },
+  { interest: 'A life decision', line: 'Bring the big decision. Aristotle has been warned.' },
+  { interest: 'A work proposal', line: 'Bring the proposal. We’ll find the holes before your boss does.' },
+  { interest: 'A belief I want to test', line: 'Bring the belief. Seneca has waited nearly 2,000 years for this.' },
+];
 
 const check = `<svg class="chip__check" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 ---
@@ -126,12 +136,50 @@ const check = `<svg class="chip__check" viewBox="0 0 16 16" width="14" height="1
         </noscript>
       </form>
 
-      {/* After joining, the product answers. A repeat signup gets its own line. */}
+      {/* After joining, the product answers: a short exchange in the two
+          voices, then a mini hand-back card, the thing every real session
+          ends with. waitlist.ts fills in the name and echoes their idea (as
+          text, never HTML). A repeat signup gets its own line instead. */}
       <div class="waitlist__done" data-done tabindex="-1" hidden>
-        <ProductLine size="lg" data-done-joined>
-          You’re in. We’ll email you before the beta opens on December 1. Until then, practice: doubt one thing you
-          believed this morning.
-        </ProductLine>
+        <div class="thanks" data-done-joined>
+          <ProductLine size="lg">You’re in<span data-thanks-name></span>. Welcome to the argument.</ProductLine>
+          <ProductLine>
+            We’ll email you before the beta opens on December 1. The waitlist gets in first, so you’ll be one of the first
+            people we politely disagree with.
+          </ProductLine>
+
+          <div class="thanks__exchange" data-thanks-idea hidden>
+            <UserLine><span data-thanks-idea-text></span></UserLine>
+            <ProductLine>
+              Noted. That’s the first thing we’ll argue about. Enjoy being completely sure of it until then.
+            </ProductLine>
+          </div>
+
+          {
+            INTEREST_REPLIES.map((reply) => (
+              <ProductLine data-thanks-interest={reply.interest} hidden>
+                {reply.line}
+              </ProductLine>
+            ))
+          }
+
+          <article class="thanks__card" aria-labelledby="thanks-card-title">
+            <p id="thanks-card-title" class="thanks__card-title">Your first hand-back card</p>
+            <div class="thanks__part">
+              <p class="thanks__label">Your position</p>
+              <UserLine size="sm" speaker={false}>I’m on the waitlist.</UserLine>
+            </div>
+            <div class="thanks__part">
+              <p class="thanks__label">Toughest counterpoint</p>
+              <p class="thanks__text">None. It’s the one call we won’t argue with.</p>
+            </div>
+            <div class="thanks__part">
+              <p class="thanks__label">Cheapest test before December 1</p>
+              <p class="thanks__text">Doubt one thing you believed this morning.</p>
+            </div>
+            <p class="thanks__foot">Your call. Always.</p>
+          </article>
+        </div>
         <ProductLine size="lg" data-done-already hidden>You’re already on the list. Eager. We respect it.</ProductLine>
       </div>
     </div>
@@ -314,5 +362,57 @@ const check = `<svg class="chip__check" viewBox="0 0 16 16" width="14" height="1
   .waitlist__done {
     max-width: 36rem;
     outline: none;
+  }
+
+  /* The thank-you: a short exchange, then a mini hand-back card. */
+  .thanks {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .thanks__exchange {
+    display: grid;
+    gap: 1rem;
+  }
+  .thanks__card {
+    max-width: 26rem;
+    margin-top: 0.75rem;
+    overflow: hidden;
+    border: 1.5px solid var(--ink);
+    border-radius: 0.875rem;
+    background: var(--surface);
+  }
+  .thanks__card-title {
+    padding: 0.75rem 1.125rem;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-product);
+    font-size: var(--step-1);
+    font-weight: 580;
+    line-height: 1.2;
+  }
+  .thanks__part {
+    display: grid;
+    gap: 0.375rem;
+    padding: 0.875rem 1.125rem;
+  }
+  .thanks__part + .thanks__part {
+    border-top: 1px dashed color-mix(in srgb, var(--ink) 28%, transparent);
+  }
+  .thanks__label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--ink-muted);
+  }
+  .thanks__text {
+    font-family: var(--font-product);
+    font-size: 1.0625rem;
+    line-height: 1.45;
+  }
+  .thanks__foot {
+    padding: 0.625rem 1.125rem;
+    border-top: 1.5px solid var(--ink);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-align: right;
   }
 </style>

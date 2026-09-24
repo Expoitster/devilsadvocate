@@ -227,7 +227,17 @@ Fields:
 - Consent (required checkbox): "Email me about the Devils Advocate beta. Unsubscribe anytime." with a link to /privacy
 - Hidden: the traffic source, from `utm_source` or `ref` in the URL (max 100 characters)
 Button: Join the waitlist
-Success: You're in. We'll email you before the beta opens on December 1. Until then, practice: doubt one thing you believed this morning.
+Success (the product answers; a short exchange, then a mini hand-back card):
+- "You're in, {first name}. Welcome to the argument." (without a name: "You're in. Welcome to the argument.")
+- "We'll email you before the beta opens on December 1. The waitlist gets in first, so you'll be one of the first people we politely disagree with."
+- If they typed an idea: it's echoed back as their line (teal), then: "Noted. That's the first thing we'll argue about. Enjoy being completely sure of it until then."
+- Otherwise, one line for the first thing they said they'd bring:
+  - A startup idea: "Bring the startup idea. We're already dusting off the graveyard files."
+  - A life decision: "Bring the big decision. Aristotle has been warned."
+  - A work proposal: "Bring the proposal. We'll find the holes before your boss does."
+  - A belief I want to test: "Bring the belief. Seneca has waited nearly 2,000 years for this."
+- Card "Your first hand-back card": Your position: "I'm on the waitlist." / Toughest counterpoint: "None. It's the one call we won't argue with." / Cheapest test before December 1: "Doubt one thing you believed this morning." / sign-off: "Your call. Always."
+- Name and idea are inserted as text, never HTML.
 While sending: the button is disabled and reads "Joining…"
 Already on the list (database code 23505): You're already on the list. Eager. We respect it.
 Invalid email: That email looks off. Check for typos and try again.
