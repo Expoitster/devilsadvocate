@@ -58,7 +58,7 @@ interface Example {
 
 export const EXAMPLES: Record<Mode, Example> = {
   idea: {
-    opening: 'Food delivery for college hostels. Swiggy did it, so there’s clearly demand.',
+    opening: 'Food delivery for college hostels. The big apps did it, so there’s clearly demand.',
     questions: [
       'Who pays, students or parents?',
       'What happens to orders during vacations?',
@@ -66,19 +66,19 @@ export const EXAMPLES: Record<Mode, Example> = {
     ],
     realQuestion: [
       { lead: 'The real question:', text: 'does demand survive 3 months of holidays a year?' },
-      { lead: 'Bias spotted:', text: 'survivorship. You’re looking at Swiggy, not the graveyard.' },
+      { lead: 'Bias spotted:', text: 'survivorship. You’re looking at the big apps, not the graveyard.' },
     ],
     caseFor: 'Captive audience, dense delivery routes, cheap marketing through hostel groups.',
     otherSideNote: 'Illustrative examples for this demo',
     receipts: [
-      { source: 'HostelBites, 2017–2019', point: 'Couldn’t cover delivery costs on small orders.' },
-      { source: 'CampusCart, 2018–2020', point: 'Saw orders collapse every vacation.' },
-      { source: 'MessMate, 2016–2018', point: 'Lost to the hostel’s own mess contract.' },
+      { source: 'Hostel snack app, 2017–2019', point: 'Couldn’t cover delivery costs on small orders.' },
+      { source: 'Campus grocery app, 2018–2020', point: 'Saw orders collapse every vacation.' },
+      { source: 'Meal-plan app, 2016–2018', point: 'Lost to the hostel’s own mess contract.' },
     ],
     pushback: 'But we’ll do breakfast subscriptions!',
     reply: 'Interesting. Subscriptions fix vacation dips only if parents prepay a semester. Would they?',
     card: {
-      counterpoints: ['HostelBites, 2017–2019', 'CampusCart, 2018–2020', 'MessMate, 2016–2018'],
+      counterpoints: ['Hostel snack app, 2017–2019', 'Campus grocery app, 2018–2020', 'Meal-plan app, 2016–2018'],
       test: 'Ask hostel parents if they’d prepay a semester of breakfasts.',
     },
   },

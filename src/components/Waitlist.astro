@@ -1,7 +1,7 @@
 ---
 /**
  * The waitlist. The form is the user's voice (Bricolage, teal choices);
- * the reply after joining is the product's (a ProductLine). Signups go
+ * the reply after joining is the product's, in a pop-up. Signups go
  * straight from the browser into the Supabase `waitlist` table, which the
  * public can add to but not read. See supabase/waitlist.sql. The values
  * sent for role and interests are the labels, as the table's checks expect.
@@ -136,52 +136,68 @@ const check = `<svg class="chip__check" viewBox="0 0 16 16" width="14" height="1
         </noscript>
       </form>
 
-      {/* After joining, the product answers: a short exchange in the two
-          voices, then a mini hand-back card, the thing every real session
-          ends with. waitlist.ts fills in the name and echoes their idea (as
-          text, never HTML). A repeat signup gets its own line instead. */}
-      <div class="waitlist__done" data-done tabindex="-1" hidden>
-        <div class="thanks" data-done-joined>
-          <ProductLine size="lg">You’re in<span data-thanks-name></span>. Welcome to the argument.</ProductLine>
-          <ProductLine>
-            We’ll email you before the beta opens on December 1. The waitlist gets in first, so you’ll be one of the first
-            people we politely disagree with.
-          </ProductLine>
-
-          <div class="thanks__exchange" data-thanks-idea hidden>
-            <UserLine><span data-thanks-idea-text></span></UserLine>
-            <ProductLine>
-              Noted. That’s the first thing we’ll argue about. Enjoy being completely sure of it until then.
-            </ProductLine>
-          </div>
-
-          {
-            INTEREST_REPLIES.map((reply) => (
-              <ProductLine data-thanks-interest={reply.interest} hidden>
-                {reply.line}
-              </ProductLine>
-            ))
-          }
-
-          <article class="thanks__card" aria-labelledby="thanks-card-title">
-            <p id="thanks-card-title" class="thanks__card-title">Your first hand-back card</p>
-            <div class="thanks__part">
-              <p class="thanks__label">Your position</p>
-              <UserLine size="sm" speaker={false}>I’m on the waitlist.</UserLine>
-            </div>
-            <div class="thanks__part">
-              <p class="thanks__label">Toughest counterpoint</p>
-              <p class="thanks__text">None. It’s the one call we won’t argue with.</p>
-            </div>
-            <div class="thanks__part">
-              <p class="thanks__label">Cheapest test before December 1</p>
-              <p class="thanks__text">Doubt one thing you believed this morning.</p>
-            </div>
-            <p class="thanks__foot">Your call. Always.</p>
-          </article>
-        </div>
-        <ProductLine size="lg" data-done-already hidden>You’re already on the list. Eager. We respect it.</ProductLine>
+      {/* Takes the form's place once someone has joined. Focus lands here
+          when the pop-up closes. */}
+      <div class="waitlist__note" data-done-note tabindex="-1" hidden>
+        <ProductLine size="lg" data-note-joined>You’re on the list<span data-note-name></span>. See you on December 1.</ProductLine>
+        <ProductLine size="lg" data-note-already hidden>You’re already on the list.</ProductLine>
+        <button type="button" class="link-quiet waitlist__reopen" data-done-reopen>Show the thank-you again</button>
       </div>
+
+      {/* After joining, the product answers in a pop-up: a short exchange in
+          the two voices, then a mini hand-back card, the thing every real
+          session ends with. waitlist.ts fills in the name and echoes their
+          idea (as text, never HTML). A repeat signup gets its own line
+          instead. It closes with the button, Escape, or a tap outside. */}
+      <dialog class="thanks-dialog" data-done aria-labelledby="thanks-joined-title" tabindex="-1">
+        <div class="thanks-dialog__body">
+          <div class="thanks" data-done-joined>
+            <ProductLine size="lg" id="thanks-joined-title">You’re in<span data-thanks-name></span>. Welcome to the argument.</ProductLine>
+            <ProductLine>
+              We’ll email you before the beta opens on December 1. The waitlist gets in first, so you’ll be one of the first
+              people we politely disagree with.
+            </ProductLine>
+
+            <div class="thanks__exchange" data-thanks-idea hidden>
+              <UserLine><span data-thanks-idea-text></span></UserLine>
+              <ProductLine>
+                Noted. That’s the first thing we’ll argue about. Enjoy being completely sure of it until then.
+              </ProductLine>
+            </div>
+
+            {
+              INTEREST_REPLIES.map((reply) => (
+                <ProductLine data-thanks-interest={reply.interest} hidden>
+                  {reply.line}
+                </ProductLine>
+              ))
+            }
+
+            <article class="thanks__card" aria-labelledby="thanks-card-title">
+              <p id="thanks-card-title" class="thanks__card-title">Your first hand-back card</p>
+              <div class="thanks__part">
+                <p class="thanks__label">Your position</p>
+                <UserLine size="sm" speaker={false}>I’m on the waitlist.</UserLine>
+              </div>
+              <div class="thanks__part">
+                <p class="thanks__label">Toughest counterpoint</p>
+                <p class="thanks__text">None. It’s the one call we won’t argue with.</p>
+              </div>
+              <div class="thanks__part">
+                <p class="thanks__label">Cheapest test before December 1</p>
+                <p class="thanks__text">Doubt one thing you believed this morning.</p>
+              </div>
+              <p class="thanks__foot">Your call. Always.</p>
+            </article>
+          </div>
+          <ProductLine size="lg" id="thanks-already-title" data-done-already hidden>
+            You’re already on the list. Eager. We respect it.
+          </ProductLine>
+        </div>
+        <div class="thanks-dialog__foot">
+          <button type="button" class="btn-secondary thanks-dialog__close" data-done-close>Close</button>
+        </div>
+      </dialog>
     </div>
   </div>
 </section>
@@ -359,9 +375,113 @@ const check = `<svg class="chip__check" viewBox="0 0 16 16" width="14" height="1
     color: var(--devil);
   }
 
-  .waitlist__done {
+  .waitlist__note {
+    display: grid;
+    justify-items: start;
+    gap: 0.75rem;
     max-width: 36rem;
     outline: none;
+  }
+  .waitlist__note[hidden] {
+    display: none;
+  }
+  .waitlist__reopen {
+    min-height: 2.75rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  /* The pop-up. A sheet from the bottom edge on phones, where thumbs are;
+     centered from 40rem. The raspberry top edge says whose line this is.
+     Its body scrolls under a footer that keeps Close in reach. */
+  .thanks-dialog {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100dvh - 1.5rem);
+    margin: auto 0 0;
+    padding: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border: 0;
+    border-top: 4px solid var(--devil);
+    border-radius: 1rem 1rem 0 0;
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow: 0 0 0 1px var(--rule);
+    outline: none;
+  }
+  .thanks-dialog::backdrop {
+    background: rgb(8 10 24 / 0.62);
+  }
+  /* The page is already dark here, so it needs more dimming to recede. */
+  @media (prefers-color-scheme: dark) {
+    .thanks-dialog::backdrop {
+      background: rgb(3 4 12 / 0.8);
+    }
+  }
+  .thanks-dialog__body {
+    padding: 1.75rem var(--gutter) 1.5rem;
+  }
+  .thanks-dialog__foot {
+    position: sticky;
+    bottom: 0;
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.75rem var(--gutter) max(0.75rem, env(safe-area-inset-bottom));
+    border-top: 1px solid var(--rule);
+    background: var(--paper);
+  }
+  .thanks-dialog__close {
+    width: 100%;
+  }
+
+  @media (min-width: 40rem) {
+    .thanks-dialog {
+      width: min(36rem, 100% - 3rem);
+      max-height: calc(100dvh - 4rem);
+      margin: auto;
+      border-radius: 1rem;
+    }
+    .thanks-dialog__body {
+      padding: 2.25rem 2.25rem 1.75rem;
+    }
+    .thanks-dialog__foot {
+      padding: 0.875rem 2.25rem;
+    }
+    .thanks-dialog__close {
+      width: auto;
+    }
+  }
+
+  /* Nothing behind the pop-up scrolls while it's open. */
+  :global(html:has(dialog[data-done][open])) {
+    overflow: hidden;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .thanks-dialog[open] {
+      animation: thanks-in 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .thanks-dialog[open]::backdrop {
+      animation: thanks-fade 220ms ease-out;
+    }
+  }
+  @keyframes thanks-in {
+    from {
+      opacity: 0;
+      transform: translateY(1rem);
+    }
+  }
+  @keyframes thanks-fade {
+    from {
+      opacity: 0;
+    }
   }
 
   /* The thank-you: a short exchange, then a mini hand-back card. */

@@ -35,6 +35,7 @@ Humorous, straightforward, warm. Think: the funny, sharp friend who asks "wait, 
 
 Rules:
 - Never invent social proof: no fake testimonials, no fake user counts, no "trusted by" logos.
+- No real company, brand, or product names anywhere in the copy, not even as a punchline or a service provider. Say "the big apps", "our payment partner", "another AI chatbot". Demo startups are generic descriptions ("a hostel snack app, 2017–2019"), labeled as illustrative. Philosophers are people, not companies, so they stay.
 - Pricing is shown in USD; the site has no checkout, and every pricing button leads to the waitlist.
 - No "free" claims about the product. (Joining the waitlist is free, and the pricing section says so.)
 - Sentence case everywhere. Buttons say exactly what happens ("Join the waitlist").
@@ -100,15 +101,15 @@ Secondary link: See how it works
 Small print: Private beta opens December 1, 2026. No spam. We save the arguing for the product.
 
 Hero debate animation script (an illustration; plays once):
-1. USER (a typed message that appears with a blinking text cursor): "I'm building food delivery for college hostels. Swiggy made it, so will I."
-2. Devils Advocate: "Love the confidence. Quick question first: who's paying? The students, or their parents' UPI?"
-3. Devils Advocate: "Also, Swiggy is one survivor. We found three hostel-delivery startups that didn't make it. Want to meet them?" plus a receipt chip: "3 similar startups, why they shut down, sources linked"
+1. USER (a typed message that appears with a blinking text cursor): "I'm building food delivery for college hostels. The big apps made it, so will I."
+2. Devils Advocate: "Love the confidence. Quick question first: who's paying? The students, or their parents' wallets?"
+3. Devils Advocate: "Also, the big apps are the survivors. We found three hostel-delivery startups that didn't make it. Want to meet them?" plus a receipt chip: "3 similar startups, why they shut down, sources linked"
 4. Devils Advocate: "Your call. Always."
 
 ## Why this exists
 Heading: The people who love you are terrible at this.
-Body: Your friends say it's genius. Your parents say be careful. LinkedIn says quit your job. Nobody shows their sources.
-Body: For every Zomato, there's a graveyard of food apps nobody remembers. That's survivorship bias: you only hear from the ones who made it, because the ones who didn't aren't posting about it. We give tours of the graveyard, so you don't have to move in.
+Body: Your friends say it's genius. Your parents say be careful. The internet says quit your job. Nobody shows their sources.
+Body: For every delivery app on your phone, there's a graveyard of food apps nobody remembers. That's survivorship bias: you only hear from the ones who made it, because the ones who didn't aren't posting about it. We give tours of the graveyard, so you don't have to move in.
 
 ## Two modes
 Heading: Two ways to get argued with (nicely)
@@ -135,10 +136,10 @@ Toggle above the steps: Challenge my idea / Challenge my decision (changes the e
 
 Example content per step (shown inside a static phone-screen mockup):
 IDEA MODE (hostel food delivery):
-- Step 2 user line (shown typed into a text box): "Food delivery for college hostels. Swiggy did it, so there's clearly demand."
+- Step 2 user line (shown typed into a text box): "Food delivery for college hostels. The big apps did it, so there's clearly demand."
 - Step 3 questions: "Who pays, students or parents?" / "What happens to orders during vacations?" / "Why won't hostels just call the local dhaba?"
-- Step 4: "The real question: does demand survive 3 months of holidays a year? Bias spotted: survivorship. You're looking at Swiggy, not the graveyard."
-- Step 5 case for you: "Captive audience, dense delivery routes, cheap marketing through hostel groups." Other side, labeled "Illustrative examples for this demo": HostelBites (2017–2019) couldn't cover delivery costs on small orders; CampusCart (2018–2020) saw orders collapse every vacation; MessMate (2016–2018) lost to the hostel's own mess contract.
+- Step 4: "The real question: does demand survive 3 months of holidays a year? Bias spotted: survivorship. You're looking at the big apps, not the graveyard."
+- Step 5 case for you: "Captive audience, dense delivery routes, cheap marketing through hostel groups." Other side, labeled "Illustrative examples for this demo": a hostel snack app (2017–2019) couldn't cover delivery costs on small orders; a campus grocery app (2018–2020) saw orders collapse every vacation; a meal-plan app (2016–2018) lost to the hostel's own mess contract.
 - Step 6 user pushback: "But we'll do breakfast subscriptions!" Reply: "Interesting. Subscriptions fix vacation dips only if parents prepay a semester. Would they?"
 DECISION MODE (skipping placements to build a startup):
 - Step 2 user line: "I'm skipping placements to build my startup full time."
@@ -188,7 +189,7 @@ Benefits (the same list on both cards):
 - Your sessions stay private; delete them anytime
 
 Under the cards (small print):
-- Payments are processed securely by Dodo Payments.
+- Payments are processed securely by our payment partner.
 - Joining the waitlist is free and commits you to nothing. We'll email you before billing starts.
 - Fair use: unlimited means normal human use, not a bot arguing with our bot.
 
@@ -205,14 +206,14 @@ Heading: Things we refuse to do
 - Replace real help. If you're going through something heavy, we drop the debate and point you to people who can help.
 
 ## FAQ (questions in the user's voice, answers in the product's voice)
-- Isn't this just ChatGPT with an attitude? / Most chatbots are trained to be agreeable. We're built to find the other side, and we bring receipts: a curated database of failed startups and the actual texts of philosophers, with every quote checked.
+- Isn't this just another AI chatbot with an attitude? / Most chatbots are trained to be agreeable. We're built to find the other side, and we bring receipts: a curated database of failed startups and the actual texts of philosophers, with every quote checked.
 - Does it just disagree with everything? / No. It tells you what's strong first, then the strongest other side. Then it steps aside.
 - What if I'm actually right? / Then you walk away more sure, with the counterarguments already handled. That's a win.
 - Can I talk to it instead of typing? / Not at launch. It's text-only for now. Your thumbs will survive.
 - Who is it for? / MBA students, first-time founders, and anyone about to make a call they'd hate to get wrong.
 - Can I use it right now? / Not yet. Private beta opens December 1, 2026, and the waitlist gets in first.
 - How much will it cost? / $59 a month, or $150 a year if you like saving $558. Prices apply from December 1, 2026.
-- How do I pay? / Payments are processed securely by Dodo Payments.
+- How do I pay? / Payments are processed securely by our payment partner.
 - What do you do with my waitlist details? / We use them only to invite you to the beta. Email the contact address (PUBLIC_CONTACT_EMAIL) and we'll delete them.
 
 ## Waitlist (final section)
@@ -227,7 +228,7 @@ Fields:
 - Consent (required checkbox): "Email me about the Devils Advocate beta. Unsubscribe anytime." with a link to /privacy
 - Hidden: the traffic source, from `utm_source` or `ref` in the URL (max 100 characters)
 Button: Join the waitlist
-Success (the product answers; a short exchange, then a mini hand-back card):
+Success (a pop-up over the page, the product answering: a short exchange, then a mini hand-back card; the form is replaced by a one-line note underneath):
 - "You're in, {first name}. Welcome to the argument." (without a name: "You're in. Welcome to the argument.")
 - "We'll email you before the beta opens on December 1. The waitlist gets in first, so you'll be one of the first people we politely disagree with."
 - If they typed an idea: it's echoed back as their line (teal), then: "Noted. That's the first thing we'll argue about. Enjoy being completely sure of it until then."
@@ -238,8 +239,9 @@ Success (the product answers; a short exchange, then a mini hand-back card):
   - A belief I want to test: "Bring the belief. Seneca has waited nearly 2,000 years for this."
 - Card "Your first hand-back card": Your position: "I'm on the waitlist." / Toughest counterpoint: "None. It's the one call we won't argue with." / Cheapest test before December 1: "Doubt one thing you believed this morning." / sign-off: "Your call. Always."
 - Name and idea are inserted as text, never HTML.
+- The pop-up closes with its Close button, Escape, or a tap outside it. Focus then lands on the note that replaced the form: "You're on the list. See you on December 1." (for a repeat signup: "You're already on the list.")
 While sending: the button is disabled and reads "Joining…"
-Already on the list (database code 23505): You're already on the list. Eager. We respect it.
+Already on the list (database code 23505), in the same pop-up: You're already on the list. Eager. We respect it.
 Invalid email: That email looks off. Check for typos and try again.
 A database check failed (code 23514): Something in the form looks off. Check your email and try again.
 Consent not ticked: Tick the box so we can email you about the beta.
@@ -248,7 +250,7 @@ Send failed: Something broke on our side, and it's not your idea's fault. Try ag
 
 ## Footer
 Built by Avinash G, an MBA student who heard "great idea" one too many times.
-Links: Privacy (a short static page: we collect email, first name, role, interests, the optional one-line idea, the traffic source, and consent; it's stored in our Supabase database, used only to contact the person about the beta, and never sold; anyone can email the contact address to have their data deleted).
+Links: Privacy (a short static page: we collect email, first name, role, interests, the optional one-line idea, the traffic source, and consent; it's stored in our database, used only to contact the person about the beta, and never sold; anyone can email the contact address to have their data deleted).
 
 # REPO NOTES (added during setup)
 - Run `npm run dev` (http://localhost:4321), `npm run build`, and `npm run check`. `/_components` is a dev-only preview of the conversation components.

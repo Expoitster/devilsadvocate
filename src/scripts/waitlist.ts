@@ -33,8 +33,9 @@ function trafficSource(): string | null {
 
 export function initWaitlist(): void {
   const form = document.querySelector<HTMLFormElement>('[data-waitlist]');
-  const done = document.querySelector<HTMLElement>('[data-done]');
-  if (!form || !done) return;
+  const done = document.querySelector<HTMLDialogElement>('dialog[data-done]');
+  const note = document.querySelector<HTMLElement>('[data-done-note]');
+  if (!form || !done || !note) return;
 
   const email = form.querySelector<HTMLInputElement>('input[name="email"]')!;
   const emailError = form.querySelector<HTMLElement>('[data-email-error]')!;
@@ -59,29 +60,57 @@ export function initWaitlist(): void {
     message.hidden = true;
   };
 
-  /** Show the thank-you. For a new signup it's personal: their name, and
-      their idea echoed back (or a line for what they said they'd bring).
-      Everything is set as text, never HTML. */
+  // Open the thank-you pop-up at its top, with focus on the pop-up itself
+  // so screen readers start from the greeting.
+  const openThanks = () => {
+    if (!done.open) done.showModal();
+    done.focus({ preventScroll: true });
+    done.scrollTop = 0;
+  };
+
+  /** Show the thank-you, then leave a one-line note where the form was.
+      For a new signup it's personal: their name, and their idea echoed back
+      (or a line for what they said they'd bring). Everything is set as
+      text, never HTML. */
   const finish = (already = false) => {
-    const q = <T extends HTMLElement>(sel: string) => done.querySelector<T>(sel)!;
-    q('[data-done-joined]').hidden = already;
-    q('[data-done-already]').hidden = !already;
+    const q = <T extends HTMLElement>(root: HTMLElement, sel: string) => root.querySelector<T>(sel)!;
+    q(done, '[data-done-joined]').hidden = already;
+    q(done, '[data-done-already]').hidden = !already;
+    done.setAttribute('aria-labelledby', already ? 'thanks-already-title' : 'thanks-joined-title');
+    q(note, '[data-note-joined]').hidden = already;
+    q(note, '[data-note-already]').hidden = !already;
+    q(note, '[data-done-reopen]').hidden = already;
     if (!already) {
       const data = new FormData(form);
       const name = String(data.get('first_name') ?? '').trim().slice(0, LIMITS.first_name);
       const idea = String(data.get('first_challenge') ?? '').trim().slice(0, LIMITS.first_challenge);
       const interest = String(data.getAll('interests')[0] ?? '');
-      q('[data-thanks-name]').textContent = name ? `, ${name}` : '';
-      q('[data-thanks-idea-text]').textContent = idea;
-      q('[data-thanks-idea]').hidden = !idea;
+      q(done, '[data-thanks-name]').textContent = name ? `, ${name}` : '';
+      q(note, '[data-note-name]').textContent = name ? `, ${name}` : '';
+      q(done, '[data-thanks-idea-text]').textContent = idea;
+      q(done, '[data-thanks-idea]').hidden = !idea;
       done.querySelectorAll<HTMLElement>('[data-thanks-interest]').forEach((line) => {
         line.hidden = Boolean(idea) || line.dataset.thanksInterest !== interest;
       });
     }
+    openThanks();
+    // Swapped in behind the pop-up, so the page doesn't jump in view.
     form.hidden = true;
-    done.hidden = false;
-    done.focus();
+    note.hidden = false;
   };
+
+  done.querySelector('[data-done-close]')!.addEventListener('click', () => done.close());
+  // A tap on the dimmed page around the pop-up closes it. Clicks inside
+  // (the scrollbar included) land within its box and are ignored.
+  done.addEventListener('click', (event) => {
+    if (event.target !== done) return;
+    const box = done.getBoundingClientRect();
+    const { clientX: x, clientY: y } = event;
+    if (x < box.left || x > box.right || y < box.top || y > box.bottom) done.close();
+  });
+  // Escape closes it natively. However it closes, focus goes to the note.
+  done.addEventListener('close', () => note.focus());
+  note.querySelector('[data-done-reopen]')!.addEventListener('click', openThanks);
 
   const setSending = (on: boolean) => {
     sending = on;
@@ -99,7 +128,7 @@ export function initWaitlist(): void {
     const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
     section.scrollIntoView({ block: 'start', behavior: smooth ? 'smooth' : 'auto' });
     history.pushState(null, '', '#waitlist');
-    (form.hidden ? done : email).focus({ preventScroll: true });
+    (form.hidden ? note : email).focus({ preventScroll: true });
   });
 
   form.addEventListener('focusin', () => void loadClient(), { once: true });
